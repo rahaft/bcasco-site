@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BCASCO | Baltimore County Association of Senior Citizens Organizations</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <span class="logo-main">BCASCO</span>
+        <span class="logo-sub">Baltimore County Association of Senior Citizens Organizations</span>
+      </div>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        ☰
+      </button>
+      <nav class="main-nav" aria-label="Main navigation">
+        <ul>
+          <li><a href="events.html">Events</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li class="has-dropdown">
+            <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+              About ▾
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="about-charter.html">Charter</a></li>
+              <li><a href="about-us.html">About Us</a></li>
+              <li><a href="join.html">Join / Membership</a></li>
+            </ul>
+          </li>
+          <li><a href="login.html">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section with simple carousel -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div class="hero-image" role="img" aria-label="Photo of the BCASCO meeting location at 611 Central Avenue, Towson, Maryland">
+        <!-- Background image set in CSS -->
+      </div>
+      <div class="hero-overlay">
+        <div class="container hero-content">
+          <div class="hero-slides" aria-live="polite">
+            <div class="hero-slide is-active">
+              <h1 id="hero-heading">Welcome to BCASCO</h1>
+              <p class="hero-tagline">
+                An association of volunteers providing a forum to exchange information and take action on issues of interest to senior citizens.
+              </p>
+              <p class="hero-tagline">
+                We meet at <strong>611 Central Avenue, Towson, MD</strong>.
+              </p>
+            </div>
+            <div class="hero-slide">
+              <h2>Events &amp; Programs</h2>
+              <p class="hero-tagline">
+                Stay informed about meetings, programs, and special events for older adults across Baltimore County.
+              </p>
+            </div>
+            <div class="hero-slide">
+              <h2>Membership &amp; Updates</h2>
+              <p class="hero-tagline">
+                Learn how organizations and individuals can join BCASCO and sign up to receive important updates.
+              </p>
+            </div>
+          </div>
+          <button class="scroll-button" id="scrollToActions">
+            See events, membership, and updates
+          </button>
+          <div class="hero-dots" aria-hidden="true">
+            <button class="hero-dot is-active" type="button"></button>
+            <button class="hero-dot" type="button"></button>
+            <button class="hero-dot" type="button"></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Action Section -->
+    <section class="action-section" id="actions" aria-label="Main actions">
+      <div class="container action-grid">
+        <a class="cta-card primary" href="events.html">
+          <span class="cta-title">EVENTS</span>
+          <span class="cta-text">See what’s happening this month.</span>
+        </a>
+        <a class="cta-card primary" href="join.html">
+          <span class="cta-title">Become a Member</span>
+          <span class="cta-text">Join for free or choose a paid tier.</span>
+        </a>
+        <a class="cta-card primary" href="register.html">
+          <span class="cta-title">Register for Updates</span>
+          <span class="cta-text">Get news and event reminders by email.</span>
+        </a>
+        <a class="cta-card subtle" href="unsubscribe.html">
+          <span class="cta-title small">Unsubscribe</span>
+          <span class="cta-text">Stop receiving email updates.</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Announcements & Contact Section -->
+    <section class="page-section" id="announcements" aria-label="Announcements and contact">
+      <div class="container card-list">
+        <article class="card">
+          <h2 class="card-title">Announcements</h2>
+          <p>
+            Use this space for important updates, meeting notices, and time-sensitive announcements
+            from BCASCO. You can update this text as new information becomes available.
+          </p>
+        </article>
+        <article class="card">
+          <h2 class="card-title">Contact BCASCO President</h2>
+          <p><strong>Beth Wiseman</strong></p>
+          <p>Phone: <a href="tel:+13011234567">(301) 123-4567</a></p>
+          <p>Email: first.part[at]domain[dot]com</p>
+          <p>Meeting Location: 611 Central Avenue, Towson, MD</p>
+          <p>Mailing Address: P.O. Box 262, Randallstown, MD 21133</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <p class="footer-heading">Contact the President</p>
+        <p><strong>Beth Wiseman</strong></p>
+        <p>Phone: <a href="tel:+13011234567">(301) 123-4567</a></p>
+        <p>Email: first.part[at]domain[dot]com</p>
+      </div>
+      <div class="footer-small">
+        <p>© <span id="year"></span> Patapsco Senior Citizens. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
+
+

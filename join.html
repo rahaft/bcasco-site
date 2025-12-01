@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join / Membership | Patapsco Senior Citizens</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="index.html" class="logo-main">Patapsco Seniors</a>
+        <span class="logo-sub">Community &amp; Activities</span>
+      </div>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        ☰
+      </button>
+      <nav class="main-nav" aria-label="Main navigation">
+        <ul>
+          <li><a href="events.html">Events</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li class="has-dropdown">
+            <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+              About ▾
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="about-charter.html">Charter</a></li>
+              <li><a href="about-us.html">About Us</a></li>
+              <li><a href="join.html">Join / Membership</a></li>
+            </ul>
+          </li>
+          <li><a href="login.html">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <h1>Join / Membership</h1>
+        <p>Choose a membership option that works for you.</p>
+      </div>
+    </section>
+
+    <section class="page-section">
+      <div class="container">
+        <h2>Membership Options</h2>
+        <ul>
+          <li><strong>Free Membership</strong> – Stay informed about events and news.</li>
+          <li><strong>Paid Membership (Optional)</strong> – Help support programs and activities.</li>
+        </ul>
+
+        <h2>Membership Registration (Preview)</h2>
+        <p>
+          This is a simple, static form for the MVP. Later we can connect it to
+          Firebase to save your information and send confirmation emails.
+        </p>
+
+        <form>
+          <div class="form-row">
+            <label for="name">Full Name</label>
+            <input id="name" type="text" name="name" autocomplete="name" />
+          </div>
+          <div class="form-row">
+            <label for="email">Email Address</label>
+            <input id="email" type="email" name="email" autocomplete="email" />
+          </div>
+          <div class="form-row">
+            <label for="tier">Membership Type</label>
+            <select id="tier" name="tier">
+              <option value="free">Free</option>
+              <option value="paid">Paid</option>
+            </select>
+          </div>
+          <input type="submit" value="Submit (Demo Only)" />
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <p class="footer-heading">Contact the President</p>
+        <p><strong>Beth Wiseman</strong></p>
+        <p>Phone: <a href="tel:+13011234567">(301) 123-4567</a></p>
+        <p>Email: first.part[at]domain[dot]com</p>
+      </div>
+      <div class="footer-small">
+        <p>© <span id="year"></span> Patapsco Senior Citizens. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>
+
+

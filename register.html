@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register for Updates | Patapsco Senior Citizens</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="index.html" class="logo-main">Patapsco Seniors</a>
+        <span class="logo-sub">Community &amp; Activities</span>
+      </div>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        ☰
+      </button>
+      <nav class="main-nav" aria-label="Main navigation">
+        <ul>
+          <li><a href="events.html">Events</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li class="has-dropdown">
+            <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+              About ▾
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="about-charter.html">Charter</a></li>
+              <li><a href="about-us.html">About Us</a></li>
+              <li><a href="join.html">Join / Membership</a></li>
+            </ul>
+          </li>
+          <li><a href="login.html">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <h1>Register for Email Updates</h1>
+        <p>Share your information to receive news and event reminders from Patapsco Senior Citizens.</p>
+      </div>
+    </section>
+
+    <section class="page-section">
+      <div class="container">
+        <div class="card">
+          <h2>Stay Connected</h2>
+          <form id="register-form">
+            <div class="form-row">
+              <label for="reg-name">Full Name</label>
+              <input id="reg-name" type="text" name="name" autocomplete="name" required />
+            </div>
+            <div class="form-row">
+              <label for="reg-email">Email Address</label>
+              <input id="reg-email" type="email" name="email" autocomplete="email" required />
+            </div>
+            <div class="form-row">
+              <label for="reg-phone">Phone (optional)</label>
+              <input id="reg-phone" type="tel" name="phone" autocomplete="tel" />
+            </div>
+            <div class="form-row">
+              <label for="reg-notes">Interests or Notes (optional)</label>
+              <textarea id="reg-notes" name="notes" rows="3"></textarea>
+            </div>
+            <input type="submit" value="Register" />
+          </form>
+          <p id="register-status" style="margin-top: 0.75rem; font-size: 1rem;"></p>
+          <p style="margin-top: 0.75rem; font-size: 0.95rem;">
+            We will only use your information to share group-related news and events. You can unsubscribe at any time.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <p class="footer-heading">Contact the President</p>
+        <p><strong>Beth Wiseman</strong></p>
+        <p>Phone: <a href="tel:+13011234567">(301) 123-4567</a></p>
+        <p>Email: first.part[at]domain[dot]com</p>
+      </div>
+      <div class="footer-small">
+        <p>© <span id="year"></span> Patapsco Senior Citizens. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Firebase + Firestore for saving registrations -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-init.js"></script>
+  <script src="main.js"></script>
+  <script>
+    const regForm = document.getElementById("register-form");
+    const regStatus = document.getElementById("register-status");
+
+    if (regForm) {
+      regForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const nameInput = document.getElementById("reg-name");
+        const emailInput = document.getElementById("reg-email");
+        const phoneInput = document.getElementById("reg-phone");
+        const notesInput = document.getElementById("reg-notes");
+
+        const name = nameInput ? nameInput.value.trim() : "";
+        const email = emailInput ? emailInput.value.trim().toLowerCase() : "";
+        const phone = phoneInput ? phoneInput.value.trim() : "";
+        const notes = notesInput ? notesInput.value.trim() : "";
+
+        if (!name || !email) {
+          if (regStatus) {
+            regStatus.textContent = "Please enter at least your name and email.";
+            regStatus.style.color = "red";
+          }
+          return;
+        }
+
+        if (regStatus) {
+          regStatus.textContent = "Saving your registration...";
+          regStatus.style.color = "#333";
+        }
+
+        db.collection("registrations")
+          .add({
+            name,
+            email,
+            phone,
+            notes,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          })
+          .then(() => {
+            if (regStatus) {
+              regStatus.textContent = "Thank you! You are registered to receive updates.";
+              regStatus.style.color = "green";
+            }
+            regForm.reset();
+          })
+          .catch((error) => {
+            console.error("Error saving registration:", error);
+            if (regStatus) {
+              regStatus.textContent = "Sorry, something went wrong. Please try again.";
+              regStatus.style.color = "red";
+            }
+          });
+      });
+    }
+  </script>
+</body>
+</html>
+
+

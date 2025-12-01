@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | Patapsco Senior Citizens</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="index.html" class="logo-main">Patapsco Seniors</a>
+        <span class="logo-sub">Community &amp; Activities</span>
+      </div>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        ☰
+      </button>
+      <nav class="main-nav" aria-label="Main navigation">
+        <ul>
+          <li><a href="events.html">Events</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li class="has-dropdown">
+            <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+              About ▾
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="about-charter.html">Charter</a></li>
+              <li><a href="about-us.html">About Us</a></li>
+              <li><a href="join.html">Join / Membership</a></li>
+            </ul>
+          </li>
+          <li><a href="login.html">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <h1>Admin Dashboard</h1>
+        <p>View people who have registered for updates and see who has logged in.</p>
+      </div>
+    </section>
+
+    <section class="page-section">
+      <div class="container">
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+            <h2 style="margin: 0;">Registered People</h2>
+            <button id="logout-button" type="button">Log Out</button>
+          </div>
+          <p id="admin-status" style="margin-top: 0.75rem; font-size: 1rem;"></p>
+
+          <div style="overflow-x: auto; margin-top: 1rem;">
+            <table style="width: 100%; border-collapse: collapse; min-width: 480px;">
+              <thead>
+                <tr>
+                  <th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #ddd;">Name</th>
+                  <th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #ddd;">Email</th>
+                  <th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #ddd;">Phone</th>
+                  <th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #ddd;">Registered</th>
+                  <th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #ddd;">Last Login</th>
+                </tr>
+              </thead>
+              <tbody id="registrations-body">
+                <tr>
+                  <td colspan="5" style="padding: 0.75rem;">Loading registrations…</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <p class="footer-heading">Contact the President</p>
+        <p><strong>Beth Wiseman</strong></p>
+        <p>Phone: <a href="tel:+13011234567">(301) 123-4567</a></p>
+        <p>Email: first.part[at]domain[dot]com</p>
+      </div>
+      <div class="footer-small">
+        <p>© <span id="year"></span> Patapsco Senior Citizens. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Firebase + Firestore -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-init.js"></script>
+  <script src="main.js"></script>
+  <script>
+    const adminStatus = document.getElementById("admin-status");
+    const registrationsBody = document.getElementById("registrations-body");
+    const logoutBtn = document.getElementById("logout-button");
+
+    function formatDate(timestamp) {
+      if (!timestamp) return "";
+      const d = timestamp.toDate();
+      return d.toLocaleDateString() + " " + d.toLocaleTimeString();
+    }
+
+    function renderRegistrations(snapshot) {
+      if (!registrationsBody) return;
+
+      registrationsBody.innerHTML = "";
+
+      if (snapshot.empty) {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+        cell.colSpan = 5;
+        cell.textContent = "No registrations found yet.";
+        cell.style.padding = "0.75rem";
+        row.appendChild(cell);
+        registrationsBody.appendChild(row);
+        return;
+      }
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const row = document.createElement("tr");
+
+        const nameCell = document.createElement("td");
+        nameCell.textContent = data.name || "";
+        nameCell.style.padding = "0.5rem";
+
+        const emailCell = document.createElement("td");
+        emailCell.textContent = data.email || "";
+        emailCell.style.padding = "0.5rem";
+
+        const phoneCell = document.createElement("td");
+        phoneCell.textContent = data.phone || "";
+        phoneCell.style.padding = "0.5rem";
+
+        const createdCell = document.createElement("td");
+        createdCell.textContent = data.createdAt ? formatDate(data.createdAt) : "";
+        createdCell.style.padding = "0.5rem";
+
+        const lastLoginCell = document.createElement("td");
+        lastLoginCell.textContent = data.lastLoginAt ? formatDate(data.lastLoginAt) : "Never logged in";
+        lastLoginCell.style.padding = "0.5rem";
+
+        row.appendChild(nameCell);
+        row.appendChild(emailCell);
+        row.appendChild(phoneCell);
+        row.appendChild(createdCell);
+        row.appendChild(lastLoginCell);
+
+        registrationsBody.appendChild(row);
+      });
+    }
+
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        auth
+          .signOut()
+          .then(() => {
+            window.location.href = "login.html";
+          })
+          .catch((error) => {
+            console.error("Error signing out:", error);
+            if (adminStatus) {
+              adminStatus.textContent = "Could not log out. Please try again.";
+              adminStatus.style.color = "red";
+            }
+          });
+      });
+    }
+
+    // Require login to view this page
+    auth.onAuthStateChanged((user) => {
+      if (!user) {
+        if (adminStatus) {
+          adminStatus.textContent = "You must be logged in to view this page.";
+          adminStatus.style.color = "red";
+        }
+        if (registrationsBody) {
+          registrationsBody.innerHTML = "";
+        }
+        // Optionally redirect to login page after a short delay
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 2000);
+        return;
+      }
+
+      if (adminStatus) {
+        adminStatus.textContent = "Signed in as " + (user.email || "admin") + ". Loading registrations…";
+        adminStatus.style.color = "#333";
+      }
+
+      db.collection("registrations")
+        .orderBy("createdAt", "desc")
+        .get()
+        .then((snapshot) => {
+          if (adminStatus) {
+            adminStatus.textContent = "Showing people who registered. 'Last Login' shows who has logged in.";
+            adminStatus.style.color = "#333";
+          }
+          renderRegistrations(snapshot);
+        })
+        .catch((error) => {
+          console.error("Error loading registrations:", error);
+          if (adminStatus) {
+            adminStatus.textContent = "Could not load registrations.";
+            adminStatus.style.color = "red";
+          }
+        });
+    });
+  </script>
+</body>
+</html>
+
+

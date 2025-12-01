@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | BCASCO</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="index.html" class="logo-main">BCASCO</a>
+        <span class="logo-sub">Baltimore County Association of Senior Citizens Organizations</span>
+      </div>
+      <button class="nav-toggle" aria-label="Toggle navigation">
+        ☰
+      </button>
+      <nav class="main-nav" aria-label="Main navigation">
+        <ul>
+          <li><a href="events.html">Events</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li class="has-dropdown">
+            <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
+              About ▾
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="about-charter.html">Charter</a></li>
+              <li><a href="about-us.html">About Us</a></li>
+              <li><a href="join.html">Join / Membership</a></li>
+            </ul>
+          </li>
+          <li><a href="login.html">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <h1>Login</h1>
+        <p>Admin and member login (to be connected to Firebase).</p>
+      </div>
+    </section>
+
+    <section class="page-section">
+      <div class="container">
+        <div class="card">
+          <h2>Account Login</h2>
+          <p>
+            Use your email and password to sign in. Accounts are managed through the site
+            administrator.
+          </p>
+          <form id="login-form">
+            <div class="form-row">
+              <label for="login-email">Email Address</label>
+              <input id="login-email" type="email" name="email" autocomplete="email" />
+            </div>
+            <div class="form-row">
+              <label for="login-password">Password</label>
+              <input id="login-password" type="password" name="password" />
+            </div>
+            <input type="submit" value="Log In" />
+          </form>
+          <p id="login-status" style="margin-top: 0.75rem; font-size: 1rem;"></p>
+          <p style="margin-top: 0.75rem; font-size: 1rem;">
+            <a href="#">Forgot your password?</a> (to be added later)
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <p class="footer-heading">Contact the President</p>
+        <p><strong>Beth Wiseman</strong></p>
+        <p>Phone: <a href="tel:+13011234567">(301) 123-4567</a></p>
+        <p>Email: first.part[at]domain[dot]com</p>
+      </div>
+      <div class="footer-small">
+        <p>© <span id="year"></span> Patapsco Senior Citizens. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Firebase (Compat SDK for simple script usage) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-init.js"></script>
+  <script>
+    const loginForm = document.getElementById("login-form");
+    const statusEl = document.getElementById("login-status");
+
+    if (loginForm) {
+      loginForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const emailInput = document.getElementById("login-email");
+        const passwordInput = document.getElementById("login-password");
+
+        const email = emailInput ? emailInput.value.trim() : "";
+        const password = passwordInput ? passwordInput.value : "";
+
+        if (!email || !password) {
+          if (statusEl) {
+            statusEl.textContent = "Please enter both email and password.";
+            statusEl.style.color = "red";
+          }
+          return;
+        }
+
+        if (statusEl) {
+          statusEl.textContent = "Signing in...";
+          statusEl.style.color = "#333";
+        }
+
+        auth
+          .signInWithEmailAndPassword(email, password)
+          .then((userCredential) => {
+            const user = userCredential.user;
+
+            // Update or create a registration record for this user with last login time
+            if (db && user && user.email) {
+              const emailLower = user.email.toLowerCase();
+              db.collection("registrations")
+                .where("email", "==", emailLower)
+                .limit(1)
+                .get()
+                .then((snapshot) => {
+                  const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+                  if (!snapshot.empty) {
+                    snapshot.forEach((doc) => {
+                      doc.ref.update({ lastLoginAt: timestamp });
+                    });
+                  } else {
+                    db.collection("registrations").add({
+                      email: emailLower,
+                      createdAt: timestamp,
+                      lastLoginAt: timestamp,
+                    });
+                  }
+                })
+                .catch((err) => {
+                  console.error("Error updating login time:", err);
+                });
+            }
+
+            if (statusEl) {
+              statusEl.textContent = "Logged in successfully.";
+              statusEl.style.color = "green";
+            }
+
+            // Redirect to the admin dashboard where registrations are listed
+            window.location.href = "admin.html";
+          })
+          .catch((error) => {
+            if (statusEl) {
+              // Show a user-friendly message
+              if (error.code === "auth/user-not-found") {
+                statusEl.textContent = "No account found for that email.";
+              } else if (error.code === "auth/wrong-password") {
+                statusEl.textContent = "Incorrect password. Please try again.";
+              } else {
+                statusEl.textContent = error.message || "Login failed. Please try again.";
+              }
+              statusEl.style.color = "red";
+            }
+          });
+      });
+    }
+  </script>
+  <script src="main.js"></script>
+</body>
+</html>
+
+
