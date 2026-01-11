@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Register for Updates | Patapsco Senior Citizens</title>
+  <title>Register for Updates | BCASCO</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="site-header">
     <div class="container header-inner">
       <div class="logo">
-        <a href="index.html" class="logo-main">Patapsco Seniors</a>
-        <span class="logo-sub">Community &amp; Activities</span>
+        <a href="index.html" class="logo-main">BCASCO</a>
+        <span class="logo-sub">Baltimore County Association of<br>Senior Citizens Organizations</span>
       </div>
       <button class="nav-toggle" aria-label="Toggle navigation">
         ☰
@@ -20,15 +20,11 @@
         <ul>
           <li><a href="events.html">Events</a></li>
           <li><a href="contact.html">Contact</a></li>
-          <li><a href="blog.html">Blog</a></li>
+          <li><a href="about-us.html">About</a></li>
           <li class="has-dropdown">
-            <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
-              About ▾
-            </button>
+            <a href="register.html" class="dropdown-toggle">Subscribe</a>
             <ul class="dropdown-menu">
-              <li><a href="about-charter.html">Charter</a></li>
-              <li><a href="about-us.html">About Us</a></li>
-              <li><a href="join.html">Join / Membership</a></li>
+              <li><a href="register.html?subject=Unsubscribe">Unsubscribe</a></li>
             </ul>
           </li>
           <li><a href="login.html">Login</a></li>
@@ -40,8 +36,8 @@
   <main>
     <section class="page-hero">
       <div class="container">
-        <h1>Register for Email Updates</h1>
-        <p>Share your information to receive news and event reminders from Patapsco Senior Citizens.</p>
+        <h1 id="register-page-title">Register for Email Updates</h1>
+        <p id="register-page-description">Share your information to receive news and event reminders from BCASCO.</p>
       </div>
     </section>
 
@@ -59,6 +55,21 @@
               <input id="reg-email" type="email" name="email" autocomplete="email" required />
             </div>
             <div class="form-row">
+              <label for="reg-topic">Topic *</label>
+              <select id="reg-topic" name="topic" required>
+                <option value="Subscribe">Subscribe</option>
+                <option value="RSVP">RSVP</option>
+                <option value="Unsubscribe">Unsubscribe</option>
+                <option value="General Info">General Info</option>
+                <option value="Events">Events</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label for="reg-subject">Subject *</label>
+              <input id="reg-subject" type="text" name="subject" placeholder="e.g., RSVP: Event Title" required />
+            </div>
+            <div class="form-row">
               <label for="reg-phone">Phone (optional)</label>
               <input id="reg-phone" type="tel" name="phone" autocomplete="tel" />
             </div>
@@ -66,7 +77,7 @@
               <label for="reg-notes">Interests or Notes (optional)</label>
               <textarea id="reg-notes" name="notes" rows="3"></textarea>
             </div>
-            <input type="submit" value="Register" />
+            <input type="submit" id="register-submit-btn" value="Register" />
           </form>
           <p id="register-status" style="margin-top: 0.75rem; font-size: 1rem;"></p>
           <p style="margin-top: 0.75rem; font-size: 0.95rem;">
@@ -82,11 +93,14 @@
       <div>
         <p class="footer-heading">Contact the President</p>
         <p><strong>Beth Wiseman</strong></p>
-        <p>Phone: <a href="tel:+13011234567">(301) 123-4567</a></p>
+        <p>Phone: <a href="tel:+14104846866">410-484-6866</a></p>
         <p>Email: first.part[at]domain[dot]com</p>
       </div>
       <div class="footer-small">
-        <p>© <span id="year"></span> Patapsco Senior Citizens. All rights reserved.</p>
+        <p>© <span id="year"></span> BCASCO. All rights reserved.</p>
+        <p id="version-info" style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.7;">
+          Version: <span id="version-number">Loading...</span>
+        </p>
       </div>
     </div>
   </footer>
@@ -101,23 +115,66 @@
     const regForm = document.getElementById("register-form");
     const regStatus = document.getElementById("register-status");
 
+    // Pre-select topic and subject based on URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const topicParam = urlParams.get("subject"); // Keep "subject" in URL for backward compatibility
+    const eventParam = urlParams.get("event");
+    const regTopicSelect = document.getElementById("reg-topic");
+    const regSubjectInput = document.getElementById("reg-subject");
+    const pageTitle = document.getElementById("register-page-title");
+    const pageDescription = document.getElementById("register-page-description");
+    const submitBtn = document.getElementById("register-submit-btn");
+    
+    // Update page title, description, and button text for unsubscribe
+    if (topicParam === "Unsubscribe") {
+      if (pageTitle) pageTitle.textContent = "Unsubscribe from Email Updates";
+      if (pageDescription) pageDescription.textContent = "Request to be removed from BCASCO email updates.";
+      if (submitBtn) submitBtn.value = "Send";
+    }
+    
+    if (regTopicSelect) {
+      if (topicParam) {
+        regTopicSelect.value = topicParam;
+        // If RSVP and event title provided, pre-fill subject field
+        if (topicParam === "RSVP" && eventParam && regSubjectInput) {
+          regSubjectInput.value = `RSVP: ${eventParam}`;
+        } else if (regSubjectInput) {
+          // Pre-fill subject based on topic
+          if (topicParam === "Unsubscribe") {
+            regSubjectInput.value = "Unsubscribe Request";
+          } else {
+            regSubjectInput.value = `${topicParam} Inquiry`;
+          }
+        }
+      } else {
+        regTopicSelect.value = "Subscribe";
+        if (regSubjectInput) {
+          regSubjectInput.value = "";
+        }
+      }
+    }
+
     if (regForm) {
       regForm.addEventListener("submit", function (event) {
         event.preventDefault();
 
         const nameInput = document.getElementById("reg-name");
         const emailInput = document.getElementById("reg-email");
+        const topicInput = document.getElementById("reg-topic");
+        const subjectInput = document.getElementById("reg-subject");
         const phoneInput = document.getElementById("reg-phone");
         const notesInput = document.getElementById("reg-notes");
 
         const name = nameInput ? nameInput.value.trim() : "";
         const email = emailInput ? emailInput.value.trim().toLowerCase() : "";
+        const topic = topicInput ? topicInput.value.trim() : "";
+        const subject = subjectInput ? subjectInput.value.trim() : "";
         const phone = phoneInput ? phoneInput.value.trim() : "";
         const notes = notesInput ? notesInput.value.trim() : "";
 
-        if (!name || !email) {
+        if (!name || !email || !topic || !subject) {
           if (regStatus) {
-            regStatus.textContent = "Please enter at least your name and email.";
+            regStatus.textContent = "Please enter at least your name and email, select a topic, and enter a subject.";
             regStatus.style.color = "red";
           }
           return;
@@ -128,17 +185,35 @@
           regStatus.style.color = "#333";
         }
 
-        db.collection("registrations")
-          .add({
-            name,
-            email,
-            phone,
-            notes,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-          })
+        // Use contactMessages for unsubscribe, registrations for subscribe/RSVP
+        const collection = topic === "Unsubscribe" ? "contactMessages" : "registrations";
+        const data = {
+          name,
+          email,
+          topic,
+          subject,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        };
+
+        if (collection === "registrations") {
+          data.phone = phone;
+          data.notes = notes;
+        } else {
+          data.message = `Request to ${topic.toLowerCase()}`;
+          data.read = false;
+        }
+
+        db.collection(collection)
+          .add(data)
           .then(() => {
             if (regStatus) {
-              regStatus.textContent = "Thank you! You are registered to receive updates.";
+              let successMessage = "Thank you! You are registered to receive updates.";
+              if (topic === "Unsubscribe") {
+                successMessage = "Thank you! Your unsubscribe request has been received.";
+              } else if (topic === "RSVP") {
+                successMessage = "Thank you! Your RSVP has been received.";
+              }
+              regStatus.textContent = successMessage;
               regStatus.style.color = "green";
             }
             regForm.reset();

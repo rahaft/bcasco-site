@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact | Patapsco Senior Citizens</title>
+  <title>Contact | BCASCO</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="site-header">
     <div class="container header-inner">
       <div class="logo">
-        <a href="index.html" class="logo-main">Patapsco Seniors</a>
-        <span class="logo-sub">Community &amp; Activities</span>
+        <a href="index.html" class="logo-main">BCASCO</a>
+        <span class="logo-sub">Baltimore County Association of<br>Senior Citizens Organizations</span>
       </div>
       <button class="nav-toggle" aria-label="Toggle navigation">
         ☰
@@ -20,15 +20,11 @@
         <ul>
           <li><a href="events.html">Events</a></li>
           <li><a href="contact.html">Contact</a></li>
-          <li><a href="blog.html">Blog</a></li>
+          <li><a href="about-us.html">About</a></li>
           <li class="has-dropdown">
-            <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
-              About ▾
-            </button>
+            <a href="register.html" class="dropdown-toggle">Subscribe</a>
             <ul class="dropdown-menu">
-              <li><a href="about-charter.html">Charter</a></li>
-              <li><a href="about-us.html">About Us</a></li>
-              <li><a href="join.html">Join / Membership</a></li>
+              <li><a href="register.html?subject=Unsubscribe">Unsubscribe</a></li>
             </ul>
           </li>
           <li><a href="login.html">Login</a></li>
@@ -47,35 +43,53 @@
 
     <section class="page-section">
       <div class="container">
-        <div class="card">
-          <h2>Contact Form (Demo)</h2>
-          <p>
-            This simple form can later be wired up to send email or store
-            messages in Firebase. For now, it shows the fields we will use.
-          </p>
-          <form>
+        <!-- Contact Form (shown if enabled) -->
+        <div id="contact-form-container" class="card" style="display: none;">
+          <h2>Contact Form</h2>
+          <form id="contact-form">
             <div class="form-row">
               <label for="contact-name">Full Name</label>
-              <input id="contact-name" type="text" name="name" autocomplete="name" />
+              <input id="contact-name" type="text" name="name" autocomplete="name" required />
             </div>
             <div class="form-row">
               <label for="contact-email">Email Address</label>
-              <input id="contact-email" type="email" name="email" autocomplete="email" />
+              <input id="contact-email" type="email" name="email" autocomplete="email" required />
+            </div>
+            <div class="form-row">
+              <label for="contact-topic">Topic *</label>
+              <select id="contact-topic" name="topic" required>
+                <option value="General Info">General Info</option>
+                <option value="Subscribe">Subscribe</option>
+                <option value="Unsubscribe">Unsubscribe</option>
+                <option value="Events">Events</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label for="contact-subject">Subject *</label>
+              <input id="contact-subject" type="text" name="subject" placeholder="e.g., General inquiry" required />
             </div>
             <div class="form-row">
               <label for="contact-message">Message</label>
-              <textarea id="contact-message" name="message"></textarea>
+              <textarea id="contact-message" name="message" rows="5" required></textarea>
             </div>
-            <input type="submit" value="Send (Demo Only)" />
+            <input type="submit" value="Send Message" />
           </form>
+          <p id="contact-form-status" style="margin-top: 0.75rem; font-size: 1rem;"></p>
         </div>
 
-        <div class="page-section">
-          <h2>Organization Information</h2>
-          <p>
-            Add mailing address, directions, and any other helpful
-            information for visitors here.
-          </p>
+        <!-- Contact Information (shown if form is disabled) -->
+        <div id="contact-info-container" class="card">
+          <h2>Contact Information</h2>
+          <div id="contact-info-display">
+            <p><strong>Beth Wiseman</strong></p>
+            <p>Phone: <a href="tel:+14104846866">410-484-6866</a></p>
+            <p>Email: <span class="email-obfuscate"><span>bwiseman</span><span>84</span><span>@</span><span>hotmail</span><span>.</span><span>com</span></span></p>
+            <p style="margin-top: 1.5rem;"><strong>Meeting Location:</strong></p>
+            <p>611 Central Avenue, Towson, MD 21204</p>
+            <p style="margin-top: 1rem;"><strong>Mailing Address:</strong></p>
+            <p>P.O. Box 262, Randallstown, MD 21133</p>
+          </div>
         </div>
       </div>
     </section>
@@ -86,16 +100,227 @@
       <div>
         <p class="footer-heading">Contact the President</p>
         <p><strong>Beth Wiseman</strong></p>
-        <p>Phone: <a href="tel:+13011234567">(301) 123-4567</a></p>
+        <p>Phone: <a href="tel:+14104846866">410-484-6866</a></p>
         <p>Email: first.part[at]domain[dot]com</p>
       </div>
       <div class="footer-small">
-        <p>© <span id="year"></span> Patapsco Senior Citizens. All rights reserved.</p>
+        <p>© <span id="year"></span> BCASCO. All rights reserved.</p>
+        <p id="version-info" style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.7;">
+          Version: <span id="version-number">Loading...</span>
+        </p>
       </div>
     </div>
   </footer>
 
+  <!-- Firebase + Firestore -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-init.js"></script>
   <script src="main.js"></script>
+  <script>
+    const contactFormContainer = document.getElementById("contact-form-container");
+    const contactInfoContainer = document.getElementById("contact-info-container");
+    const contactInfoDisplay = document.getElementById("contact-info-display");
+    const contactForm = document.getElementById("contact-form");
+    const contactFormStatus = document.getElementById("contact-form-status");
+
+    // Pre-select topic based on URL parameter and show form IMMEDIATELY
+    const urlParams = new URLSearchParams(window.location.search);
+    const topicParam = urlParams.get("subject"); // Keep "subject" in URL for backward compatibility
+    const contactTopicSelect = document.getElementById("contact-topic");
+    const contactSubjectInput = document.getElementById("contact-subject");
+    
+    // Show form immediately if topic parameter is present (before loading settings)
+    if (topicParam) {
+      if (contactFormContainer) {
+        contactFormContainer.style.display = "block";
+      }
+      if (contactInfoContainer) {
+        contactInfoContainer.style.display = "none";
+      }
+    }
+    
+    if (contactTopicSelect && topicParam) {
+      contactTopicSelect.value = topicParam;
+      // Pre-fill subject based on topic
+      if (contactSubjectInput) {
+        if (topicParam === "Unsubscribe") {
+          contactSubjectInput.value = "Unsubscribe Request";
+        } else {
+          contactSubjectInput.value = `${topicParam} Inquiry`;
+        }
+      }
+    } else if (contactTopicSelect) {
+      contactTopicSelect.value = "General Info";
+      if (contactSubjectInput) {
+        contactSubjectInput.value = "";
+      }
+    }
+
+    // Load contact settings and info
+    function loadContactSettings() {
+      // Check URL parameters first - if topic parameter exists, show form immediately
+      const urlParamsForSettings = new URLSearchParams(window.location.search);
+      const topicParamForSettings = urlParamsForSettings.get("subject");
+      
+      if (topicParamForSettings && contactFormContainer) {
+        // Show form immediately if topic parameter is present
+        contactFormContainer.style.display = "block";
+        if (contactInfoContainer) {
+          contactInfoContainer.style.display = "none";
+        }
+      }
+      
+      if (!db) {
+        // Default: show contact info if Firebase not available (unless URL param forces form)
+        if (!topicParamForSettings) {
+          if (contactFormContainer) contactFormContainer.style.display = "none";
+          if (contactInfoContainer) contactInfoContainer.style.display = "block";
+        }
+        return;
+      }
+
+      // Load contact settings
+      db.collection("settings")
+        .doc("contact")
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            const data = doc.data();
+            const showForm = data.showForm === true;
+            
+            // If URL has topic parameter, show form regardless of setting
+            const shouldShowForm = showForm || (topicParamForSettings !== null);
+
+            if (contactFormContainer) {
+              contactFormContainer.style.display = shouldShowForm ? "block" : "none";
+            }
+            if (contactInfoContainer) {
+              contactInfoContainer.style.display = shouldShowForm ? "none" : "block";
+            }
+
+            // Load contact info if available
+            if (data.contactInfo && contactInfoDisplay) {
+              const info = data.contactInfo;
+              const email = info.email || "bwiseman84@hotmail.com";
+              const emailParts = email.split('@');
+              const localPart = emailParts[0];
+              const domainParts = emailParts[1].split('.');
+              const domainName = domainParts[0];
+              const domainExt = domainParts[1];
+              
+              contactInfoDisplay.innerHTML = `
+                <p><strong>${info.name || "Beth Wiseman"}</strong></p>
+                <p>Phone: <a href="tel:${info.phone || "+14104846866"}">${info.phone || "410-484-6866"}</a></p>
+                <p>Email: <span class="email-obfuscate"><span>${localPart}</span><span>@</span><span>${domainName}</span><span>.</span><span>${domainExt}</span></span></p>
+                ${info.meetingLocation ? `<p style="margin-top: 1.5rem;"><strong>Meeting Location:</strong></p><p>${info.meetingLocation}</p>` : ""}
+                ${info.mailingAddress ? `<p style="margin-top: 1rem;"><strong>Mailing Address:</strong></p><p>${info.mailingAddress}</p>` : ""}
+              `;
+              // Make the newly added email clickable
+              setTimeout(() => {
+                makeEmailsClickable();
+              }, 100);
+            }
+          } else {
+            // Default: show contact info
+            if (contactFormContainer) contactFormContainer.style.display = "none";
+            if (contactInfoContainer) contactInfoContainer.style.display = "block";
+          }
+        })
+        .catch((error) => {
+          console.error("Error loading contact settings:", error);
+          // Default: show contact info on error (unless URL param forces form)
+          if (!hasTopicParam) {
+            if (contactFormContainer) contactFormContainer.style.display = "none";
+            if (contactInfoContainer) contactInfoContainer.style.display = "block";
+          } else {
+            // URL param forces form to show even on error
+            if (contactFormContainer) contactFormContainer.style.display = "block";
+            if (contactInfoContainer) contactInfoContainer.style.display = "none";
+          }
+        });
+    }
+
+    // Handle contact form submission
+    if (contactForm) {
+      contactForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (!db) {
+          if (contactFormStatus) {
+            contactFormStatus.textContent = "Unable to send message. Please try again later.";
+            contactFormStatus.style.color = "red";
+          }
+          return;
+        }
+
+        const name = document.getElementById("contact-name").value.trim();
+        const email = document.getElementById("contact-email").value.trim();
+        const topic = document.getElementById("contact-topic").value.trim();
+        const subject = document.getElementById("contact-subject").value.trim();
+        const message = document.getElementById("contact-message").value.trim();
+
+        if (!name || !email || !topic || !subject || !message) {
+          if (contactFormStatus) {
+            contactFormStatus.textContent = "Please fill in all fields.";
+            contactFormStatus.style.color = "red";
+          }
+          return;
+        }
+
+        if (contactFormStatus) {
+          contactFormStatus.textContent = "Sending message...";
+          contactFormStatus.style.color = "#333";
+        }
+
+        db.collection("contactMessages")
+          .add({
+            name,
+            email,
+            topic,
+            subject,
+            message,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            read: false
+          })
+          .then(() => {
+            if (contactFormStatus) {
+              contactFormStatus.textContent = "Thank you! Your message has been sent.";
+              contactFormStatus.style.color = "green";
+            }
+            contactForm.reset();
+          })
+          .catch((error) => {
+            console.error("Error sending message:", error);
+            if (contactFormStatus) {
+              contactFormStatus.textContent = "Error sending message. Please try again.";
+              contactFormStatus.style.color = "red";
+            }
+          });
+      });
+    }
+
+    // Make emails clickable
+    function makeEmailsClickable() {
+      const emailElements = document.querySelectorAll(".email-obfuscate");
+      emailElements.forEach((el) => {
+        const parts = Array.from(el.querySelectorAll("span")).map((span) => span.textContent);
+        const email = parts.join("");
+        el.innerHTML = `<a href="mailto:${email}">${email}</a>`;
+      });
+    }
+
+    // Load settings when page is ready
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => {
+        loadContactSettings();
+        makeEmailsClickable();
+      });
+    } else {
+      loadContactSettings();
+      makeEmailsClickable();
+    }
+  </script>
 </body>
 </html>
 

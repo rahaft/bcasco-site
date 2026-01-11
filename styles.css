@@ -1,3 +1,16 @@
+/* 
+ * SECTION REFERENCE FOR MOBILE TESTING:
+ * 
+ * 1. section-header (Header & Navigation) - Top navigation bar with logo and menu
+ * 2. section-hero (Hero Section) - Large banner with welcome message and action buttons
+ * 3. section-events-scroll (Events Carousel) - Scrolling carousel of upcoming events
+ * 4. section-actions (Action Cards) - Green section with "Get Updates" card
+ * 5. section-announcements (Announcements & Contact) - White cards with announcements and contact info
+ * 6. section-footer (Footer) - Dark footer with contact information and version
+ * 
+ * All sections have data-section-name attributes for easy identification in dev tools.
+ */
+
 /* Base styles with senior-friendly typography and high contrast */
 
 *,
@@ -25,7 +38,7 @@ img {
 }
 
 a {
-  color: #0b63ce;
+  color: #1f6fb2;
   text-decoration-thickness: 2px;
 }
 
@@ -72,6 +85,8 @@ a:focus-visible {
 .logo-sub {
   font-size: 1.05rem;
   color: #555;
+  line-height: 1.3;
+  text-align: center;
 }
 
 .nav-toggle {
@@ -130,10 +145,25 @@ a:focus-visible {
   margin: 0;
   min-width: 12rem;
   display: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
 }
 
+/* Show dropdown on hover for desktop */
+@media (min-width: 721px) {
+  .has-dropdown:hover .dropdown-menu {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* Show dropdown when .show class is added (for mobile click) */
 .dropdown-menu.show {
   display: block;
+  opacity: 1;
+  visibility: visible;
 }
 
 .dropdown-menu li a {
@@ -154,14 +184,9 @@ a:focus-visible {
 }
 
 .hero-image {
-  background-image: linear-gradient(
-      rgba(7, 42, 86, 0.6),
-      rgba(7, 42, 86, 0.6)
-    ),
-    url("hero-placeholder.jpg"); /* swap this with a BCASCO meeting-location photo when ready */
-  background-size: cover;
-  background-position: center;
-  min-height: 65vh;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
 }
 
 .hero-overlay {
@@ -170,6 +195,17 @@ a:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
+  background: linear-gradient(
+    rgba(7, 42, 86, 0.55),
+    rgba(7, 42, 86, 0.75)
+  );
+}
+
+.hero-map-iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  pointer-events: none; /* treat as visual background */
 }
 
 .hero-content {
@@ -228,32 +264,305 @@ a:focus-visible {
   background-color: #ffb703;
 }
 
-.scroll-button {
-  font-size: 1.3rem;
-  padding: 0.9rem 2.4rem;
-  border-radius: 999px;
-  border: none;
-  background-color: #1f6fb2;
-  color: #ffffff;
-  font-weight: 700;
-  cursor: pointer;
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
 }
 
-.scroll-button:hover,
-.scroll-button:focus-visible {
+.hero-button {
+  font-size: 1.2rem;
+  padding: 0.9rem 2rem;
+  border-radius: 999px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.hero-button-primary {
+  background-color: #1f6fb2;
+  color: #ffffff;
+}
+
+.hero-button-primary:hover,
+.hero-button-primary:focus-visible {
   background-color: #165486;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(31, 111, 178, 0.3);
+}
+
+.hero-button-secondary {
+  background-color: #ffffff;
+  color: #1f6fb2;
+  border: 2px solid #1f6fb2;
+}
+
+.hero-button-secondary:hover,
+.hero-button-secondary:focus-visible {
+  background-color: #1f6fb2;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(31, 111, 178, 0.3);
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  background-color: #ffffff;
+  margin: 10% auto;
+  padding: 2rem;
+  border-radius: 1rem;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.modal-close {
+  color: #aaa;
+  float: right;
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 1;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+}
+
+.modal-close:hover,
+.modal-close:focus {
+  color: #000;
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #184c7d;
+}
+
+.modal-content .form-row {
+  margin-bottom: 1.25rem;
+}
+
+.modal-content label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #184c7d;
+}
+
+.modal-content input[type="text"],
+.modal-content input[type="email"] {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1.05rem;
+  border-radius: 0.5rem;
+  border: 2px solid #c3d4c6;
+  box-sizing: border-box;
+}
+
+.modal-content input[type="text"]:focus,
+.modal-content input[type="email"]:focus {
+  outline: none;
+  border-color: #1f6fb2;
+  box-shadow: 0 0 0 3px rgba(31, 111, 178, 0.1);
+}
+
+/* Events scroll section */
+
+.events-scroll-section {
+  padding: 2.5rem 0;
+  background-color: #f8f9fa;
+}
+
+.events-scroll-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  border: 1px solid #d2e3ff;
+  box-shadow: 0 4px 12px rgba(15, 37, 70, 0.08);
+}
+
+.events-carousel-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.carousel-nav-buttons {
+  display: none; /* Hidden on desktop by default, shown on mobile */
+}
+
+/* Desktop: Show buttons on sides */
+@media (min-width: 721px) {
+  .events-carousel-wrapper {
+    position: relative;
+  }
+
+  .carousel-nav-buttons {
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none; /* Allow clicks to pass through container */
+    z-index: 10;
+  }
+
+  .carousel-nav-buttons .carousel-prev {
+    position: absolute;
+    left: -70px;
+    top: 0;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    display: flex !important;
+    pointer-events: auto; /* Re-enable clicks on button */
+  }
+
+  .carousel-nav-buttons .carousel-next {
+    position: absolute;
+    right: -70px;
+    top: 0;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    display: flex !important;
+    pointer-events: auto; /* Re-enable clicks on button */
+  }
+}
+
+.events-carousel-container {
+  position: relative;
+  flex: 1;
+  min-height: 200px;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  border: 1px solid #d2e3ff;
+  box-shadow: 0 4px 12px rgba(15, 37, 70, 0.08);
+}
+
+.carousel-nav {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #1f6fb2;
+  background-color: #ffffff;
+  color: #1f6fb2;
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.carousel-nav:hover {
+  background-color: #1f6fb2;
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+.carousel-nav:active {
+  transform: scale(0.95);
+}
+
+.carousel-nav:focus-visible {
+  outline: 3px solid #ffb703;
+  outline-offset: 2px;
+}
+
+.event-slide {
+  display: none;
+  text-align: center;
+}
+
+.event-slide.is-active {
+  display: block;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.event-scroll-item {
+  padding: 1rem;
+  border-bottom: 1px solid #e8f0ff;
+}
+
+.event-scroll-item:last-child {
+  border-bottom: none;
+}
+
+.event-action-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.event-rsvp-btn:hover {
+  background-color: #165486 !important;
+}
+
+.event-signup-btn:hover {
+  background-color: #1f6fb2 !important;
+  color: #ffffff !important;
 }
 
 /* Action section */
 
 .action-section {
-  background-color: transparent;
+  background-color: #2d5016;
   padding: 2.5rem 0 3rem;
 }
 
 .action-grid {
   display: grid;
-  gap: 1rem;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  max-width: 400px;
+  margin: 0 auto;
+  justify-items: center;
+}
+
+@media (max-width: 600px) {
+  .action-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .cta-card {
@@ -268,6 +577,12 @@ a:focus-visible {
 .cta-card.primary {
   background-color: #ffffff;
   border-color: #c7d9ff;
+  position: relative;
+}
+
+.action-section .cta-card.primary {
+  background-color: #ffffff;
+  border-color: #4a7c2a;
 }
 
 .cta-card.subtle {
@@ -290,6 +605,25 @@ a:focus-visible {
 .cta-text {
   font-size: 1.1rem;
   color: #335a86;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.cta-unsubscribe {
+  display: block;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.cta-unsubscribe a {
+  font-size: 0.85rem;
+  color: #666;
+  text-decoration: none;
+}
+
+.cta-unsubscribe a:hover {
+  text-decoration: underline;
 }
 
 .cta-card:focus-visible {
@@ -349,6 +683,39 @@ a:focus-visible {
   box-shadow: 0 18px 40px rgba(15, 37, 70, 0.12);
 }
 
+.admin-menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-menu button {
+  border-radius: 999px;
+  border: 1px solid #c7d9ff;
+  background-color: #ffffff;
+  color: #184c7d;
+  padding: 0.55rem 1.4rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.admin-menu button:hover,
+.admin-menu button:focus-visible {
+  background-color: #e3eeff;
+}
+
+.map-embed {
+  margin-top: 1rem;
+}
+
+.map-embed iframe {
+  width: 100%;
+  height: 260px;
+  border: 0;
+  border-radius: 1rem;
+}
+
 .card-title {
   font-size: 1.5rem;
   margin-bottom: 0.4rem;
@@ -378,6 +745,7 @@ label {
 
 input[type="text"],
 input[type="email"],
+input[type="password"],
 textarea,
 select {
   width: 100%;
@@ -398,15 +766,15 @@ input[type="submit"] {
   padding: 0.7rem 1.6rem;
   border-radius: 999px;
   border: none;
-  background-color: #1a7a3d;
-  color: white;
+  background-color: #1f6fb2;
+  color: #ffffff;
   font-weight: 700;
   cursor: pointer;
 }
 
 button.primary-btn:hover,
 input[type="submit"]:hover {
-  background-color: #155f30;
+  background-color: #165486;
 }
 
 /* Footer */
@@ -435,6 +803,16 @@ input[type="submit"]:hover {
   color: #99c2ff;
 }
 
+/* Email obfuscation - spans are hidden from bots but visible to users */
+.email-obfuscate span {
+  display: inline;
+}
+
+.email-obfuscate a {
+  color: inherit;
+  text-decoration: underline;
+}
+
 .footer-small {
   font-size: 0.9rem;
   color: #d9e1dc;
@@ -443,6 +821,7 @@ input[type="submit"]:hover {
 /* Responsive tweaks */
 
 @media (max-width: 720px) {
+  /* SECTION: Header & Navigation - Mobile */
   .nav-toggle {
     display: block;
   }
@@ -453,8 +832,9 @@ input[type="submit"]:hover {
     right: 0;
     top: 100%;
     background-color: #ffffff;
-    border-bottom: 3px solid #d7e4d8;
+    border-bottom: 3px solid #d2e3ff;
     display: none;
+    box-shadow: 0 4px 12px rgba(15, 37, 70, 0.1);
   }
 
   .main-nav.open {
@@ -468,31 +848,373 @@ input[type="submit"]:hover {
     gap: 0.75rem;
   }
 
+  .main-nav a {
+    font-size: 1.1rem;
+    padding: 0.5rem 0;
+    display: block;
+    width: 100%;
+  }
+
   .has-dropdown .dropdown-menu {
     position: static;
     box-shadow: none;
     border-radius: 0;
     padding-left: 1rem;
+    display: block !important; /* Always show dropdown items on mobile */
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  
+  /* Make unsubscribe always visible on mobile as a submenu item */
+  .has-dropdown .dropdown-toggle {
+    pointer-events: none; /* Disable click on "Subscribe" on mobile */
+  }
+  
+  .has-dropdown .dropdown-menu li {
+    display: block;
+  }
+
+  .logo-main {
+    font-size: 1.4rem;
+    text-align: center;
+  }
+
+  .logo-sub {
+    font-size: 0.85rem;
+    text-align: center;
+    line-height: 1.3;
+    display: block;
+    margin-top: 0.25rem;
+    padding: 0 2.5rem; /* Add padding to prevent overlap with menu button */
+  }
+
+  .logo {
+    flex: 1;
+    align-items: center;
+    text-align: center;
+    min-width: 0; /* Allow text to wrap */
+  }
+
+  .header-inner {
+    padding: 0.75rem 0;
+    justify-content: center;
+    position: relative;
+    min-height: 80px; /* Ensure enough space for two-line subtitle */
+  }
+
+  .nav-toggle {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 101; /* Ensure menu button is above everything */
+  }
+
+  /* SECTION: Hero Section - Mobile */
+  .hero {
+    min-height: 50vh;
+    max-height: 70vh;
+  }
+
+  .hero-content {
+    padding: 1rem;
   }
 
   .hero-content h1 {
-    font-size: 2rem;
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
   }
 
   .hero-tagline {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-button {
     font-size: 1.1rem;
+    padding: 0.85rem 1.5rem;
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  /* SECTION: Events Carousel - Mobile */
+  .events-scroll-section {
+    padding: 1.5rem 0;
+  }
+
+  .events-scroll-section .container {
+    padding: 0 0.5rem;
+    max-width: 100%;
+  }
+
+  .events-carousel-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+  }
+
+  /* Events container - full width, appears first */
+  .events-carousel-container,
+  #homepage-events-container {
+    padding: 1.5rem 1rem;
+    min-height: 180px;
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    order: 1;
+  }
+
+  /* Hide side navigation buttons on mobile */
+  .events-carousel-wrapper > .carousel-nav {
+    display: none !important;
+  }
+
+  /* Navigation buttons container - row at bottom */
+  .carousel-nav-buttons {
+    display: flex !important; /* Override desktop styles */
+    justify-content: space-between;
+    gap: 2%;
+    width: 100%;
+    padding: 0 0.5rem;
+    margin-top: 1rem;
+    order: 2;
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    transform: none !important;
+    pointer-events: auto;
+  }
+
+  /* Navigation buttons at bottom, 45% width each */
+  .carousel-nav-buttons .carousel-nav {
+    width: 45%;
+    height: 50px;
+    font-size: 1.5rem;
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    transform: none !important;
+    border-radius: 0.5rem;
+    flex-shrink: 0;
+    display: flex !important; /* Override inline style when shown */
+  }
+
+  .event-slide h3 {
+    font-size: 1.1rem !important;
+  }
+
+  .event-slide p {
+    font-size: 0.9rem !important;
+  }
+
+  .event-action-btn {
+    padding: 0.65rem 1.25rem !important;
+    font-size: 0.9rem !important;
+    width: 100%;
+    max-width: 200px;
+  }
+
+  /* Event buttons container on mobile */
+  .event-buttons-container {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+  }
+
+  /* SECTION: Action Cards - Mobile */
+  .action-section {
+    padding: 2rem 0;
+  }
+
+  .action-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 0 1rem;
+    justify-items: center;
+  }
+
+  .action-grid .cta-card {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .cta-card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .cta-title {
+    font-size: 1.3rem;
+  }
+
+  .cta-text {
+    font-size: 1rem;
+  }
+
+  /* SECTION: Announcements & Contact - Mobile */
+  .page-section {
+    padding: 1.5rem 0;
+  }
+
+  .card-list {
+    gap: 1rem;
+  }
+
+  .card {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .card-title {
+    font-size: 1.3rem;
+  }
+
+  .page-section p {
+    font-size: 1.05rem;
+  }
+
+  /* SECTION: Modals - Mobile */
+  .modal-content {
+    margin: 5% auto;
+    padding: 1.5rem;
+    width: 95%;
+    max-width: none;
+  }
+
+  .modal-close {
+    font-size: 1.75rem;
+    right: 0.75rem;
+    top: 0.75rem;
+  }
+
+  .modal-content h2 {
+    font-size: 1.5rem;
+    padding-right: 2rem;
+  }
+
+  /* SECTION: Footer - Mobile */
+  .site-footer {
+    padding: 1.5rem 0;
+  }
+
+  .footer-inner {
+    text-align: center;
+  }
+
+  .footer-heading {
+    font-size: 1rem;
+  }
+
+  /* General mobile improvements */
+  .container {
+    padding: 0 1rem;
+  }
+
+  html {
+    font-size: 17px; /* Slightly smaller base font on mobile */
   }
 }
 
-@media (min-width: 721px) {
+/* Tablet and larger screens */
+@media (min-width: 721px) and (max-width: 1024px) {
   .action-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    justify-items: center;
   }
 
   .footer-inner {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+  }
+
+  .hero-content h1 {
+    font-size: 2.3rem;
+  }
+
+  .hero-tagline {
+    font-size: 1.2rem;
+  }
+}
+
+/* Desktop screens */
+@media (min-width: 1025px) {
+  .action-grid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    justify-items: center;
+  }
+
+  .footer-inner {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+/* Inline editing styles */
+.editable-active {
+  transition: background-color 0.2s ease;
+}
+
+.editable-active:hover {
+  position: relative;
+}
+
+.editable-active:hover::before {
+  content: "✏️";
+  position: absolute;
+  left: -1.5rem;
+  top: 0;
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+[data-editable]:focus {
+  outline: 2px dashed #ffb703 !important;
+  outline-offset: 2px !important;
+  background-color: rgba(255, 183, 3, 0.1) !important;
+}
+
+/* Adjust body padding when admin indicator is present */
+body:has(#admin-edit-indicator) {
+  padding-top: 3rem;
+}
+
+#admin-edit-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #ffb703;
+  color: #000;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  font-weight: 600;
+  z-index: 10000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 720px) {
+  body:has(#admin-edit-indicator) {
+    padding-top: 3.5rem;
+  }
+  
+  .editable-active:hover::before {
+    display: none; /* Hide edit icon on mobile */
   }
 }
 

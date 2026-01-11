@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Charter | Patapsco Senior Citizens</title>
+  <title>Charter | BCASCO</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="site-header">
     <div class="container header-inner">
       <div class="logo">
-        <a href="index.html" class="logo-main">Patapsco Seniors</a>
-        <span class="logo-sub">Community &amp; Activities</span>
+        <a href="index.html" class="logo-main">BCASCO</a>
+        <span class="logo-sub">Baltimore County Association of<br>Senior Citizens Organizations</span>
       </div>
       <button class="nav-toggle" aria-label="Toggle navigation">
         ☰
@@ -20,15 +20,11 @@
         <ul>
           <li><a href="events.html">Events</a></li>
           <li><a href="contact.html">Contact</a></li>
-          <li><a href="blog.html">Blog</a></li>
+          <li><a href="about-us.html">About</a></li>
           <li class="has-dropdown">
-            <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
-              About ▾
-            </button>
+            <a href="register.html" class="dropdown-toggle">Subscribe</a>
             <ul class="dropdown-menu">
-              <li><a href="about-charter.html">Charter</a></li>
-              <li><a href="about-us.html">About Us</a></li>
-              <li><a href="join.html">Join / Membership</a></li>
+              <li><a href="register.html?subject=Unsubscribe">Unsubscribe</a></li>
             </ul>
           </li>
           <li><a href="login.html">Login</a></li>
@@ -41,7 +37,7 @@
     <section class="page-hero">
       <div class="container">
         <h1>Charter</h1>
-        <p>Guiding principles for the Patapsco Senior Citizens group.</p>
+        <p>Guiding principles for BCASCO.</p>
       </div>
     </section>
 
@@ -64,11 +60,14 @@
       <div>
         <p class="footer-heading">Contact the President</p>
         <p><strong>Beth Wiseman</strong></p>
-        <p>Phone: <a href="tel:+13011234567">(301) 123-4567</a></p>
+        <p>Phone: <a href="tel:+14104846866">410-484-6866</a></p>
         <p>Email: first.part[at]domain[dot]com</p>
       </div>
       <div class="footer-small">
-        <p>© <span id="year"></span> Patapsco Senior Citizens. All rights reserved.</p>
+        <p>© <span id="year"></span> BCASCO. All rights reserved.</p>
+        <p id="version-info" style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.7;">
+          Version: <span id="version-number">Loading...</span>
+        </p>
       </div>
     </div>
   </footer>

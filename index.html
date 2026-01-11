@@ -4,14 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BCASCO | Baltimore County Association of Senior Citizens Organizations</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏛️</text></svg>" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <header class="site-header">
+  <!-- SECTION: Site Header & Navigation -->
+  <header class="site-header" id="section-header" data-section-name="Header & Navigation">
     <div class="container header-inner">
       <div class="logo">
-        <span class="logo-main">BCASCO</span>
-        <span class="logo-sub">Baltimore County Association of Senior Citizens Organizations</span>
+        <a href="index.html" class="logo-main">BCASCO</a>
+        <span class="logo-sub">Baltimore County Association of<br>Senior Citizens Organizations</span>
       </div>
       <button class="nav-toggle" aria-label="Toggle navigation">
         ☰
@@ -20,15 +22,11 @@
         <ul>
           <li><a href="events.html">Events</a></li>
           <li><a href="contact.html">Contact</a></li>
-          <li><a href="blog.html">Blog</a></li>
+          <li><a href="about-us.html">About</a></li>
           <li class="has-dropdown">
-            <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
-              About ▾
-            </button>
+            <a href="register.html" class="dropdown-toggle">Subscribe</a>
             <ul class="dropdown-menu">
-              <li><a href="about-charter.html">Charter</a></li>
-              <li><a href="about-us.html">About Us</a></li>
-              <li><a href="join.html">Join / Membership</a></li>
+              <li><a href="register.html?subject=Unsubscribe">Unsubscribe</a></li>
             </ul>
           </li>
           <li><a href="login.html">Login</a></li>
@@ -38,107 +36,490 @@
   </header>
 
   <main>
-    <!-- Hero Section with simple carousel -->
-    <section class="hero" aria-labelledby="hero-heading">
-      <div class="hero-image" role="img" aria-label="Photo of the BCASCO meeting location at 611 Central Avenue, Towson, Maryland">
-        <!-- Background image set in CSS -->
+    <!-- SECTION: Hero Section with building image background -->
+    <section class="hero" id="section-hero" data-section-name="Hero Section" aria-labelledby="hero-heading">
+      <div class="hero-image" aria-label="Street view of the BCASCO meeting location at 611 Central Avenue, Towson, Maryland">
+        <iframe
+          class="hero-map-iframe"
+          title="BCASCO building street view"
+          src="https://www.google.com/maps/embed?pb=!4v1764631944763!6m8!1m7!1sOPGxYu1z_OCCHpl4SSvaNA!2m2!1d39.40352815038935!2d-76.609482318329!3f94.2429412973445!4f10.467908567879945!5f0.7820865974627469"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+          allow="accelerometer; gyroscope"
+        ></iframe>
       </div>
       <div class="hero-overlay">
         <div class="container hero-content">
           <div class="hero-slides" aria-live="polite">
             <div class="hero-slide is-active">
-              <h1 id="hero-heading">Welcome to BCASCO</h1>
-              <p class="hero-tagline">
+              <h1 id="hero-heading" data-editable="hero-heading">Welcome to BCASCO</h1>
+              <p class="hero-tagline" data-editable="hero-tagline">
                 An association of volunteers providing a forum to exchange information and take action on issues of interest to senior citizens.
-              </p>
-              <p class="hero-tagline">
-                We meet at <strong>611 Central Avenue, Towson, MD</strong>.
-              </p>
-            </div>
-            <div class="hero-slide">
-              <h2>Events &amp; Programs</h2>
-              <p class="hero-tagline">
-                Stay informed about meetings, programs, and special events for older adults across Baltimore County.
-              </p>
-            </div>
-            <div class="hero-slide">
-              <h2>Membership &amp; Updates</h2>
-              <p class="hero-tagline">
-                Learn how organizations and individuals can join BCASCO and sign up to receive important updates.
               </p>
             </div>
           </div>
-          <button class="scroll-button" id="scrollToActions">
-            See events, membership, and updates
-          </button>
-          <div class="hero-dots" aria-hidden="true">
-            <button class="hero-dot is-active" type="button"></button>
-            <button class="hero-dot" type="button"></button>
-            <button class="hero-dot" type="button"></button>
+          <div class="hero-buttons">
+            <button class="hero-button hero-button-primary" id="getUpdatesBtn">
+              Get Updates
+            </button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Action Section -->
-    <section class="action-section" id="actions" aria-label="Main actions">
+    <!-- SECTION: Scrolling Events Section -->
+    <section class="events-scroll-section" id="section-events-scroll" data-section-name="Events Carousel" aria-label="Upcoming events">
+      <div class="container">
+        <div class="events-carousel-wrapper">
+          <div id="homepage-events-container" class="events-scroll-container">
+            <div style="text-align: center; padding: 2rem;">
+              <p>Loading events...</p>
+            </div>
+          </div>
+          <div class="carousel-nav-buttons">
+            <button class="carousel-nav carousel-prev" id="eventPrevBtn" aria-label="Previous event" style="display: none;">
+              ‹
+            </button>
+            <button class="carousel-nav carousel-next" id="eventNextBtn" aria-label="Next event" style="display: none;">
+              ›
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: Action Section (Get Updates Card) -->
+    <section class="action-section" id="section-actions" data-section-name="Action Cards" aria-label="Main actions">
       <div class="container action-grid">
-        <a class="cta-card primary" href="events.html">
-          <span class="cta-title">EVENTS</span>
-          <span class="cta-text">See what’s happening this month.</span>
-        </a>
-        <a class="cta-card primary" href="join.html">
-          <span class="cta-title">Become a Member</span>
-          <span class="cta-text">Join for free or choose a paid tier.</span>
-        </a>
         <a class="cta-card primary" href="register.html">
-          <span class="cta-title">Register for Updates</span>
-          <span class="cta-text">Get news and event reminders by email.</span>
-        </a>
-        <a class="cta-card subtle" href="unsubscribe.html">
-          <span class="cta-title small">Unsubscribe</span>
-          <span class="cta-text">Stop receiving email updates.</span>
+          <span class="cta-title" data-editable="cta-title">Get Updates</span>
+          <span class="cta-text" data-editable="cta-text">Get news and event reminders by email.</span>
+          <span class="cta-unsubscribe">
+            <a href="register.html?subject=Unsubscribe" style="font-size: 0.85rem; color: #666; text-decoration: none;">Unsubscribe</a>
+          </span>
         </a>
       </div>
     </section>
 
-    <!-- Announcements & Contact Section -->
-    <section class="page-section" id="announcements" aria-label="Announcements and contact">
+    <!-- SECTION: Announcements & Contact Section -->
+    <section class="page-section" id="section-announcements" data-section-name="Announcements & Contact" aria-label="Announcements and contact">
       <div class="container card-list">
         <article class="card">
-          <h2 class="card-title">Announcements</h2>
-          <p>
+          <h2 class="card-title" data-editable="announcements-title">Announcements</h2>
+          <p data-editable="announcements-text">
             Use this space for important updates, meeting notices, and time-sensitive announcements
             from BCASCO. You can update this text as new information becomes available.
           </p>
         </article>
         <article class="card">
-          <h2 class="card-title">Contact BCASCO President</h2>
-          <p><strong>Beth Wiseman</strong></p>
-          <p>Phone: <a href="tel:+13011234567">(301) 123-4567</a></p>
-          <p>Email: first.part[at]domain[dot]com</p>
-          <p>Meeting Location: 611 Central Avenue, Towson, MD</p>
-          <p>Mailing Address: P.O. Box 262, Randallstown, MD 21133</p>
+          <h2 class="card-title" data-editable="contact-title">Contact BCASCO President</h2>
+          <div data-editable="contact-info">
+            <p><strong>Beth Wiseman</strong></p>
+            <p>Phone: <a href="tel:+14104846866">410-484-6866</a></p>
+            <p>Email: <span class="email-obfuscate"><span>bwiseman</span><span>84</span><span>@</span><span>hotmail</span><span>.</span><span>com</span></span></p>
+            <p>Meeting Location: 611 Central Avenue, Towson, MD</p>
+            <p>Mailing Address: P.O. Box 262, Randallstown, MD 21133</p>
+          </div>
         </article>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer">
+  <!-- Get Updates Modal -->
+  <div id="getUpdatesModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="modal-close" id="closeGetUpdatesModal">&times;</span>
+      <h2>Get Updates</h2>
+      <p>Sign up to receive news and event reminders from BCASCO.</p>
+      <form id="getUpdatesForm">
+        <div class="form-row">
+          <label for="updates-name">Full Name *</label>
+          <input id="updates-name" type="text" name="name" required autocomplete="name" />
+        </div>
+        <div class="form-row">
+          <label for="updates-email">Email Address *</label>
+          <input id="updates-email" type="email" name="email" required autocomplete="email" />
+        </div>
+        <div class="form-row">
+          <label for="updates-topic">Topic *</label>
+          <select id="updates-topic" name="topic" required>
+            <option value="Subscribe">Subscribe</option>
+            <option value="Unsubscribe">Unsubscribe</option>
+            <option value="General Info">General Info</option>
+            <option value="Events">Events</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="updates-subject">Subject *</label>
+          <input id="updates-subject" type="text" name="subject" placeholder="e.g., Subscribe to updates" required />
+        </div>
+        <div class="form-row">
+          <input type="submit" value="Sign Up for Updates" />
+        </div>
+        <p id="updates-status" style="margin-top: 0.75rem; font-size: 1rem;"></p>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- SECTION: Site Footer -->
+  <footer class="site-footer" id="section-footer" data-section-name="Footer">
     <div class="container footer-inner">
       <div>
         <p class="footer-heading">Contact the President</p>
         <p><strong>Beth Wiseman</strong></p>
-        <p>Phone: <a href="tel:+13011234567">(301) 123-4567</a></p>
-        <p>Email: first.part[at]domain[dot]com</p>
+        <p>Phone: <a href="tel:+14104846866">410-484-6866</a></p>
+        <p>Email: <span class="email-obfuscate"><span>bwiseman</span><span>84</span><span>@</span><span>hotmail</span><span>.</span><span>com</span></span></p>
       </div>
       <div class="footer-small">
-        <p>© <span id="year"></span> Patapsco Senior Citizens. All rights reserved.</p>
+        <p>© <span id="year"></span> BCASCO. All rights reserved.</p>
+        <p id="version-info" style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.7;">
+          Version: <span id="version-number">Loading...</span>
+        </p>
       </div>
     </div>
   </footer>
 
+  <!-- Firebase + Firestore for loading events -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-init.js"></script>
   <script src="main.js"></script>
+  <script src="inline-edit.js"></script>
+  <script>
+    // Load events for scrolling section
+    const homepageEventsContainer = document.getElementById("homepage-events-container");
+
+    function formatEventDate(dateString) {
+      if (!dateString) return "";
+      const date = new Date(dateString + "T00:00:00");
+      if (isNaN(date.getTime())) return dateString;
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      return date.toLocaleDateString("en-US", options);
+    }
+
+    function loadHomepageEvents() {
+      if (!db || !homepageEventsContainer) {
+        if (homepageEventsContainer) {
+          homepageEventsContainer.innerHTML = '<div style="text-align: center; padding: 2rem;"><p>Events will be displayed here.</p></div>';
+        }
+        return;
+      }
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const todayStr = today.toISOString().split('T')[0];
+
+      db.collection("events")
+        .orderBy("date", "asc")
+        .where("date", ">=", todayStr)
+        .get()
+        .then((snapshot) => {
+          if (!homepageEventsContainer) return;
+
+          if (snapshot.empty) {
+            homepageEventsContainer.innerHTML = '<div style="text-align: center; padding: 2rem;"><p>No upcoming events scheduled. <a href="events.html">View all events</a></p></div>';
+            return;
+          }
+
+          const events = [];
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            // Only include events with valid dates
+            if (data.date && data.date.trim() !== "") {
+              events.push({ id: doc.id, ...data });
+            }
+          });
+
+          // Create carousel structure
+          homepageEventsContainer.innerHTML = "";
+          homepageEventsContainer.className = "events-carousel-container";
+
+          let currentIndex = 0;
+          const prevBtn = document.getElementById("eventPrevBtn");
+          const nextBtn = document.getElementById("eventNextBtn");
+
+          // Show navigation buttons if more than one event
+          const navButtonsContainer = document.querySelector(".carousel-nav-buttons");
+          if (events.length > 1) {
+            if (prevBtn) prevBtn.style.display = "flex";
+            if (nextBtn) nextBtn.style.display = "flex";
+            if (navButtonsContainer) navButtonsContainer.style.display = "flex";
+          } else {
+            if (navButtonsContainer) navButtonsContainer.style.display = "none";
+          }
+
+          function showSlide(index) {
+            const slides = homepageEventsContainer.querySelectorAll(".event-slide");
+            if (slides.length === 0) return;
+            
+            slides.forEach((slide, i) => {
+              slide.classList.toggle("is-active", i === index);
+            });
+            currentIndex = index;
+          }
+
+          function nextSlide() {
+            const slides = homepageEventsContainer.querySelectorAll(".event-slide");
+            if (slides.length === 0) return;
+            const nextIndex = (currentIndex + 1) % slides.length;
+            showSlide(nextIndex);
+          }
+
+          function prevSlide() {
+            const slides = homepageEventsContainer.querySelectorAll(".event-slide");
+            if (slides.length === 0) return;
+            const prevIndex = (currentIndex - 1 + slides.length) % slides.length;
+            showSlide(prevIndex);
+          }
+
+          // Add navigation button listeners
+          if (prevBtn) {
+            prevBtn.addEventListener("click", prevSlide);
+          }
+          if (nextBtn) {
+            nextBtn.addEventListener("click", nextSlide);
+          }
+
+          events.forEach((eventData, index) => {
+            const eventSlide = document.createElement("div");
+            eventSlide.className = "event-slide";
+            if (index === 0) eventSlide.classList.add("is-active");
+
+            const title = document.createElement("h3");
+            title.textContent = eventData.title || "Untitled Event";
+            title.style.margin = "0 0 0.5rem 0";
+            title.style.fontSize = "1.2rem";
+            title.style.fontWeight = "600";
+
+            const meta = document.createElement("p");
+            meta.style.margin = "0.25rem 0";
+            meta.style.fontSize = "0.95rem";
+            meta.style.color = "#555";
+            const metaParts = [];
+            if (eventData.date) {
+              metaParts.push(formatEventDate(eventData.date));
+            }
+            if (eventData.time) {
+              metaParts.push(eventData.time);
+            }
+            if (eventData.location) {
+              metaParts.push(eventData.location);
+            }
+            meta.textContent = metaParts.join(" · ");
+
+            eventSlide.appendChild(title);
+            eventSlide.appendChild(meta);
+
+            if (eventData.notes) {
+              const notes = document.createElement("p");
+              notes.textContent = eventData.notes;
+              notes.style.margin = "0.5rem 0 0 0";
+              notes.style.fontSize = "1rem";
+              eventSlide.appendChild(notes);
+            }
+
+            // Add Sign Up button
+            const buttonContainer = document.createElement("div");
+            buttonContainer.className = "event-buttons-container";
+            buttonContainer.style.marginTop = "1.5rem";
+            buttonContainer.style.display = "flex";
+            buttonContainer.style.gap = "1rem";
+            buttonContainer.style.justifyContent = "center";
+            buttonContainer.style.flexWrap = "wrap";
+
+            const signupBtn = document.createElement("a");
+            signupBtn.href = "register.html";
+            signupBtn.className = "event-action-btn event-signup-btn";
+            signupBtn.textContent = "Sign Up for Updates";
+            signupBtn.style.padding = "0.75rem 1.5rem";
+            signupBtn.style.borderRadius = "999px";
+            signupBtn.style.border = "2px solid #1f6fb2";
+            signupBtn.style.backgroundColor = "transparent";
+            signupBtn.style.color = "#1f6fb2";
+            signupBtn.style.fontWeight = "600";
+            signupBtn.style.textDecoration = "none";
+            signupBtn.style.fontSize = "1rem";
+            signupBtn.style.cursor = "pointer";
+            signupBtn.style.display = "inline-block";
+
+            buttonContainer.appendChild(signupBtn);
+            eventSlide.appendChild(buttonContainer);
+
+            homepageEventsContainer.appendChild(eventSlide);
+          });
+
+          // Auto-scroll through events (only if more than one)
+          if (events.length > 1) {
+            let autoScrollInterval = setInterval(() => {
+              nextSlide();
+            }, 5000); // Change event every 5 seconds
+
+            // Pause auto-scroll on hover
+            homepageEventsContainer.addEventListener("mouseenter", () => {
+              clearInterval(autoScrollInterval);
+            });
+            homepageEventsContainer.addEventListener("mouseleave", () => {
+              autoScrollInterval = setInterval(() => {
+                nextSlide();
+              }, 5000);
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Error loading events:", error);
+          if (homepageEventsContainer) {
+            homepageEventsContainer.innerHTML = '<div style="text-align: center; padding: 2rem;"><p>Unable to load events. <a href="events.html">View all events</a></p></div>';
+          }
+        });
+    }
+
+    // Make email addresses clickable (reconstruct from obfuscated spans)
+    function makeEmailsClickable() {
+      const emailElements = document.querySelectorAll(".email-obfuscate");
+      emailElements.forEach((el) => {
+        const parts = Array.from(el.querySelectorAll("span")).map((span) => span.textContent);
+        const email = parts.join("");
+        el.innerHTML = `<a href="mailto:${email}">${email}</a>`;
+      });
+    }
+
+    // Modal functionality
+    const getUpdatesModal = document.getElementById("getUpdatesModal");
+    const getUpdatesBtn = document.getElementById("getUpdatesBtn");
+    const closeGetUpdatesModal = document.getElementById("closeGetUpdatesModal");
+    const getUpdatesForm = document.getElementById("getUpdatesForm");
+
+    // Open modals
+    if (getUpdatesBtn) {
+      getUpdatesBtn.addEventListener("click", () => {
+        if (getUpdatesModal) getUpdatesModal.style.display = "block";
+      });
+    }
+
+    // Close modals
+    if (closeGetUpdatesModal) {
+      closeGetUpdatesModal.addEventListener("click", () => {
+        if (getUpdatesModal) getUpdatesModal.style.display = "none";
+      });
+    }
+
+    // Close modal when clicking outside
+    window.addEventListener("click", (event) => {
+      if (event.target === getUpdatesModal) {
+        getUpdatesModal.style.display = "none";
+      }
+    });
+
+    // Pre-select "Subscribe" for Get Updates modal
+    const updatesTopicSelect = document.getElementById("updates-topic");
+    const updatesSubjectInput = document.getElementById("updates-subject");
+    if (updatesTopicSelect) {
+      updatesTopicSelect.value = "Subscribe";
+    }
+    if (updatesSubjectInput) {
+      updatesSubjectInput.value = "Subscribe to updates";
+    }
+
+    // Handle Get Updates form submission
+    if (getUpdatesForm) {
+      getUpdatesForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const statusEl = document.getElementById("updates-status");
+        const nameInput = document.getElementById("updates-name");
+        const emailInput = document.getElementById("updates-email");
+        const topicInput = document.getElementById("updates-topic");
+        const subjectInput = document.getElementById("updates-subject");
+
+        if (!nameInput || !emailInput || !topicInput || !subjectInput) return;
+
+        const name = nameInput.value.trim();
+        const email = emailInput.value.trim();
+        const topic = topicInput.value.trim();
+        const subject = subjectInput.value.trim();
+
+        if (!name || !email || !topic || !subject) {
+          if (statusEl) {
+            statusEl.textContent = "Please enter both name and email, select a topic, and enter a subject.";
+            statusEl.style.color = "red";
+          }
+          return;
+        }
+
+        if (!db) {
+          if (statusEl) {
+            statusEl.textContent = "Error: Database not available. Please refresh the page.";
+            statusEl.style.color = "red";
+          }
+          return;
+        }
+
+        if (statusEl) {
+          statusEl.textContent = "Submitting...";
+          statusEl.style.color = "#333";
+        }
+
+        // Use contactMessages for unsubscribe, registrations for subscribe
+        const collection = topic === "Unsubscribe" ? "contactMessages" : "registrations";
+        const data = {
+          name: name,
+          email: email,
+          topic: topic,
+          subject: subject,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+        };
+
+        if (collection === "registrations") {
+          data.phone = "";
+          data.notes = "";
+        } else {
+          data.message = `Request to ${topic.toLowerCase()}`;
+          data.read = false;
+        }
+
+        db.collection(collection)
+          .add(data)
+          .then(() => {
+            if (statusEl) {
+              const successMessage = topic === "Unsubscribe" 
+                ? "Thank you! Your unsubscribe request has been received." 
+                : "Thank you! You are now signed up for updates.";
+              statusEl.textContent = successMessage;
+              statusEl.style.color = "green";
+            }
+            if (getUpdatesForm) {
+              getUpdatesForm.reset();
+            }
+            // Close modal after 2 seconds
+            setTimeout(() => {
+              if (getUpdatesModal) getUpdatesModal.style.display = "none";
+              if (statusEl) statusEl.textContent = "";
+            }, 2000);
+          })
+          .catch((error) => {
+            console.error("Error saving registration:", error);
+            if (statusEl) {
+              statusEl.textContent = "Sorry, something went wrong. Please try again.";
+              statusEl.style.color = "red";
+            }
+          });
+      });
+    }
+
+    // Load events and make emails clickable when page is ready
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => {
+        loadHomepageEvents();
+        makeEmailsClickable();
+      });
+    } else {
+      loadHomepageEvents();
+      makeEmailsClickable();
+    }
+  </script>
 </body>
 </html>
 

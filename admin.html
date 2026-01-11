@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Dashboard | Patapsco Senior Citizens</title>
+  <title>Admin Dashboard | BCASCO</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="site-header">
     <div class="container header-inner">
       <div class="logo">
-        <a href="index.html" class="logo-main">Patapsco Seniors</a>
-        <span class="logo-sub">Community &amp; Activities</span>
+        <a href="index.html" class="logo-main">BCASCO</a>
+        <span class="logo-sub">Baltimore County Association of<br>Senior Citizens Organizations</span>
       </div>
       <button class="nav-toggle" aria-label="Toggle navigation">
         ☰
@@ -20,15 +20,11 @@
         <ul>
           <li><a href="events.html">Events</a></li>
           <li><a href="contact.html">Contact</a></li>
-          <li><a href="blog.html">Blog</a></li>
+          <li><a href="about-us.html">About</a></li>
           <li class="has-dropdown">
-            <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
-              About ▾
-            </button>
+            <a href="register.html" class="dropdown-toggle">Subscribe</a>
             <ul class="dropdown-menu">
-              <li><a href="about-charter.html">Charter</a></li>
-              <li><a href="about-us.html">About Us</a></li>
-              <li><a href="join.html">Join / Membership</a></li>
+              <li><a href="register.html?subject=Unsubscribe">Unsubscribe</a></li>
             </ul>
           </li>
           <li><a href="login.html">Login</a></li>
@@ -41,13 +37,22 @@
     <section class="page-hero">
       <div class="container">
         <h1>Admin Dashboard</h1>
-        <p>View people who have registered for updates and see who has logged in.</p>
+        <p>View people who have registered, see who has logged in, and manage upcoming events.</p>
       </div>
     </section>
 
     <section class="page-section">
       <div class="container">
-        <div class="card">
+        <div class="admin-menu">
+          <button type="button" data-admin-target="admin-registrations">Registrations</button>
+          <button type="button" data-admin-target="admin-events">Events</button>
+          <button type="button" data-admin-target="admin-team">Team</button>
+          <button type="button" data-admin-target="admin-announcements">Announcements</button>
+          <button type="button" data-admin-target="admin-posts">Blog Posts</button>
+          <button type="button" data-admin-target="admin-contact">Contact Settings</button>
+        </div>
+
+        <div class="card" id="admin-registrations" style="margin-bottom: 1.5rem;">
           <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
             <h2 style="margin: 0;">Registered People</h2>
             <button id="logout-button" type="button">Log Out</button>
@@ -73,6 +78,249 @@
             </table>
           </div>
         </div>
+
+        <div class="card" id="admin-events">
+          <h2 class="card-title" style="margin-top: 0;">Events Manager</h2>
+          <p id="events-admin-note" style="margin-top: 0.25rem; font-size: 1rem;"></p>
+
+          <form id="event-form" style="margin-top: 1rem;">
+            <div class="form-row">
+              <label for="event-title">Event Title</label>
+              <input id="event-title" type="text" name="title" required />
+            </div>
+            <div class="form-row">
+              <label for="event-date">Date</label>
+              <input id="event-date" type="date" name="date" required />
+            </div>
+            <div class="form-row">
+              <label for="event-time">Time (optional)</label>
+              <input id="event-time" type="text" name="time" placeholder="e.g., 10:00 AM–12:00 PM" />
+            </div>
+            <div class="form-row">
+              <label for="event-location">Location</label>
+              <input id="event-location" type="text" name="location" placeholder="611 Central Avenue, Towson, MD" required />
+            </div>
+            <div class="form-row">
+              <label for="event-notes">Details (optional)</label>
+              <textarea id="event-notes" name="notes" rows="3"></textarea>
+            </div>
+            <div class="form-row">
+              <label for="event-flyer-url">Flyer link (optional)</label>
+              <input
+                id="event-flyer-url"
+                type="url"
+                name="flyerUrl"
+                placeholder="Paste a link to a flyer (PDF or web page)"
+              />
+            </div>
+            <div class="form-row">
+              <label for="event-items">Items needed for the event (optional)</label>
+              <textarea id="event-items" name="items" rows="2" placeholder="Snacks, handouts, volunteers, etc."></textarea>
+            </div>
+            <input type="submit" value="Save Event" />
+            <button type="button" id="event-cancel-edit" class="primary-btn" style="margin-left: 0.75rem; display: none;">
+              Cancel Edit
+            </button>
+          </form>
+          <p id="event-status" style="margin-top: 0.75rem; font-size: 1rem;"></p>
+
+          <div style="overflow-x: auto; margin-top: 1.25rem;">
+            <table style="width: 100%; border-collapse: collapse; min-width: 520px;">
+              <thead>
+                <tr>
+                  <th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #ddd;">Date</th>
+                  <th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #ddd;">Title</th>
+                  <th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #ddd;">Location</th>
+                  <th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #ddd;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="events-body">
+                <tr>
+                  <td colspan="4" style="padding: 0.75rem;">Loading events…</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card" id="admin-team" style="margin-top: 1.5rem;">
+          <h2 class="card-title" style="margin-top: 0;">Team</h2>
+          <p id="team-admin-note" style="margin-top: 0.25rem; font-size: 1rem;">
+            Only the main admin account can add or edit team members.
+          </p>
+
+          <form id="team-form" style="margin-top: 1rem;">
+            <div class="form-row">
+              <label for="team-name">Name</label>
+              <input id="team-name" type="text" name="name" required />
+            </div>
+            <div class="form-row">
+              <label for="team-role">Role</label>
+              <input id="team-role" type="text" name="role" required />
+            </div>
+            <div class="form-row">
+              <label for="team-email">Email (optional)</label>
+              <input id="team-email" type="email" name="email" />
+            </div>
+            <div class="form-row">
+              <label for="team-bio">Short Bio (optional)</label>
+              <textarea id="team-bio" name="bio" rows="2"></textarea>
+            </div>
+            <input type="submit" value="Save Team Member" />
+            <button type="button" id="team-cancel-edit" class="primary-btn" style="margin-left: 0.75rem; display: none;">
+              Cancel Edit
+            </button>
+          </form>
+          <p id="team-status" style="margin-top: 0.75rem; font-size: 1rem;"></p>
+
+          <div style="overflow-x: auto; margin-top: 1.25rem;">
+            <table style="width: 100%; border-collapse: collapse; min-width: 520px;">
+              <thead>
+                <tr>
+                  <th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #ddd;">Name</th>
+                  <th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #ddd;">Role</th>
+                  <th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #ddd;">Email</th>
+                  <th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #ddd;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="team-body">
+                <tr>
+                  <td colspan="4" style="padding: 0.75rem;">Loading team…</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card" id="admin-announcements" style="margin-top: 1.5rem;">
+          <h2 class="card-title" style="margin-top: 0;">Announcements</h2>
+          <p id="ann-status-note" style="margin-top: 0.25rem; font-size: 1rem;">
+            Use announcements for time-sensitive messages that can appear on the home page.
+          </p>
+
+          <form id="ann-form" style="margin-top: 1rem;">
+            <div class="form-row">
+              <label for="ann-title">Title</label>
+              <input id="ann-title" type="text" name="title" required />
+            </div>
+            <div class="form-row">
+              <label for="ann-date">Date</label>
+              <input id="ann-date" type="date" name="date" required />
+            </div>
+            <div class="form-row">
+              <label for="ann-body">Message</label>
+              <textarea id="ann-body" name="body" rows="3" required></textarea>
+            </div>
+            <input type="submit" value="Save Announcement" />
+            <button type="button" id="ann-cancel-edit" class="primary-btn" style="margin-left: 0.75rem; display: none;">
+              Cancel Edit
+            </button>
+          </form>
+          <p id="ann-status" style="margin-top: 0.75rem; font-size: 1rem;"></p>
+
+          <div style="overflow-x: auto; margin-top: 1.25rem;">
+            <table style="width: 100%; border-collapse: collapse; min-width: 520px;">
+              <thead>
+                <tr>
+                  <th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #ddd;">Date</th>
+                  <th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #ddd;">Title</th>
+                  <th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #ddd;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="ann-body-list">
+                <tr>
+                  <td colspan="3" style="padding: 0.75rem;">Loading announcements…</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card" id="admin-posts" style="margin-top: 1.5rem;">
+          <h2 class="card-title" style="margin-top: 0;">Blog Posts</h2>
+          <p id="posts-note" style="margin-top: 0.25rem; font-size: 1rem;">
+            Blog posts can later be shown on the public blog page.
+          </p>
+
+          <form id="post-form" style="margin-top: 1rem;">
+            <div class="form-row">
+              <label for="post-title">Title</label>
+              <input id="post-title" type="text" name="title" required />
+            </div>
+            <div class="form-row">
+              <label for="post-date">Date</label>
+              <input id="post-date" type="date" name="date" required />
+            </div>
+            <div class="form-row">
+              <label for="post-summary">Short Summary (optional)</label>
+              <textarea id="post-summary" name="summary" rows="2"></textarea>
+            </div>
+            <div class="form-row">
+              <label for="post-body">Content</label>
+              <textarea id="post-body" name="body" rows="4" required></textarea>
+            </div>
+            <input type="submit" value="Save Post" />
+            <button type="button" id="post-cancel-edit" class="primary-btn" style="margin-left: 0.75rem; display: none;">
+              Cancel Edit
+            </button>
+          </form>
+          <p id="post-status" style="margin-top: 0.75rem; font-size: 1rem;"></p>
+
+          <div style="overflow-x: auto; margin-top: 1.25rem;">
+            <table style="width: 100%; border-collapse: collapse; min-width: 520px;">
+              <thead>
+                <tr>
+                  <th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #ddd;">Date</th>
+                  <th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #ddd;">Title</th>
+                  <th style="text-align: left; padding: 0.5rem; border-bottom: 1px solid #ddd;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="posts-body">
+                <tr>
+                  <td colspan="3" style="padding: 0.75rem;">Loading posts…</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card" id="admin-contact" style="display: none;">
+          <h2 class="card-title" style="margin-top: 0;">Contact Settings</h2>
+          <p id="contact-admin-note" style="margin-top: 0.25rem; font-size: 1rem;"></p>
+
+          <form id="contact-settings-form" style="margin-top: 1rem;">
+            <div class="form-row">
+              <label>
+                <input type="checkbox" id="contact-show-form" name="showForm" />
+                Show contact form (unchecked to show contact information instead)
+              </label>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Contact Information</h3>
+            <div class="form-row">
+              <label for="contact-name-input">Name</label>
+              <input id="contact-name-input" type="text" name="name" placeholder="Beth Wiseman" />
+            </div>
+            <div class="form-row">
+              <label for="contact-phone-input">Phone</label>
+              <input id="contact-phone-input" type="tel" name="phone" placeholder="410-484-6866" />
+            </div>
+            <div class="form-row">
+              <label for="contact-email-input">Email</label>
+              <input id="contact-email-input" type="email" name="email" placeholder="bwiseman84@hotmail.com" />
+            </div>
+            <div class="form-row">
+              <label for="contact-meeting-location">Meeting Location</label>
+              <input id="contact-meeting-location" type="text" name="meetingLocation" placeholder="611 Central Avenue, Towson, MD 21204" />
+            </div>
+            <div class="form-row">
+              <label for="contact-mailing-address">Mailing Address</label>
+              <input id="contact-mailing-address" type="text" name="mailingAddress" placeholder="P.O. Box 262, Randallstown, MD 21133" />
+            </div>
+            <input type="submit" value="Save Contact Settings" />
+          </form>
+          <p id="contact-settings-status" style="margin-top: 0.75rem; font-size: 1rem;"></p>
+        </div>
       </div>
     </section>
   </main>
@@ -82,11 +330,14 @@
       <div>
         <p class="footer-heading">Contact the President</p>
         <p><strong>Beth Wiseman</strong></p>
-        <p>Phone: <a href="tel:+13011234567">(301) 123-4567</a></p>
+        <p>Phone: <a href="tel:+14104846866">410-484-6866</a></p>
         <p>Email: first.part[at]domain[dot]com</p>
       </div>
       <div class="footer-small">
-        <p>© <span id="year"></span> Patapsco Senior Citizens. All rights reserved.</p>
+        <p>© <span id="year"></span> BCASCO. All rights reserved.</p>
+        <p id="version-info" style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.7;">
+          Version: <span id="version-number">Loading...</span>
+        </p>
       </div>
     </div>
   </footer>
@@ -101,6 +352,38 @@
     const adminStatus = document.getElementById("admin-status");
     const registrationsBody = document.getElementById("registrations-body");
     const logoutBtn = document.getElementById("logout-button");
+
+    const eventsBody = document.getElementById("events-body");
+    const eventForm = document.getElementById("event-form");
+    const eventStatus = document.getElementById("event-status");
+    const eventCancelEditBtn = document.getElementById("event-cancel-edit");
+    const eventsAdminNote = document.getElementById("events-admin-note");
+
+    const teamBody = document.getElementById("team-body");
+    const teamForm = document.getElementById("team-form");
+    const teamStatus = document.getElementById("team-status");
+    const teamCancelEditBtn = document.getElementById("team-cancel-edit");
+
+    const annBodyList = document.getElementById("ann-body-list");
+    const annForm = document.getElementById("ann-form");
+    const annStatus = document.getElementById("ann-status");
+    const annCancelEditBtn = document.getElementById("ann-cancel-edit");
+
+    const postsBody = document.getElementById("posts-body");
+    const postForm = document.getElementById("post-form");
+    const postStatus = document.getElementById("post-status");
+    const postCancelEditBtn = document.getElementById("post-cancel-edit");
+
+    const contactSettingsForm = document.getElementById("contact-settings-form");
+    const contactSettingsStatus = document.getElementById("contact-settings-status");
+    const contactAdminNote = document.getElementById("contact-admin-note");
+
+    const ADMIN_EMAIL = "bcasco.maryland@gmail.com";
+    let isAdminUser = false;
+    let editingEventId = null;
+    let editingTeamId = null;
+    let editingAnnId = null;
+    let editingPostId = null;
 
     function formatDate(timestamp) {
       if (!timestamp) return "";
@@ -158,6 +441,957 @@
       });
     }
 
+    function renderEvents(snapshot) {
+      if (!eventsBody) return;
+
+      eventsBody.innerHTML = "";
+
+      if (snapshot.empty) {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+        cell.colSpan = 4;
+        cell.textContent = "No events have been added yet.";
+        cell.style.padding = "0.75rem";
+        row.appendChild(cell);
+        eventsBody.appendChild(row);
+        return;
+      }
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const row = document.createElement("tr");
+
+        const dateCell = document.createElement("td");
+        dateCell.textContent = data.date || "";
+        dateCell.style.padding = "0.5rem";
+
+        const titleCell = document.createElement("td");
+        titleCell.textContent = data.title || "";
+        titleCell.style.padding = "0.5rem";
+
+        const locationCell = document.createElement("td");
+        locationCell.textContent = data.location || "";
+        locationCell.style.padding = "0.5rem";
+
+        const actionsCell = document.createElement("td");
+        actionsCell.style.padding = "0.5rem";
+
+        if (isAdminUser) {
+          const editBtn = document.createElement("button");
+          editBtn.textContent = "Edit";
+          editBtn.type = "button";
+          editBtn.style.marginRight = "0.5rem";
+          editBtn.addEventListener("click", () => {
+            const titleInput = document.getElementById("event-title");
+            const dateInput = document.getElementById("event-date");
+            const timeInput = document.getElementById("event-time");
+            const locationInput = document.getElementById("event-location");
+            const notesInput = document.getElementById("event-notes");
+
+            if (titleInput) titleInput.value = data.title || "";
+            if (dateInput) dateInput.value = data.date || "";
+            if (timeInput) timeInput.value = data.time || "";
+            if (locationInput) locationInput.value = data.location || "";
+            if (notesInput) notesInput.value = data.notes || "";
+
+            editingEventId = doc.id;
+            if (eventStatus) {
+              eventStatus.textContent = "Editing event. Make changes and click 'Save Event', or click 'Cancel Edit'.";
+              eventStatus.style.color = "#333";
+            }
+            if (eventCancelEditBtn) {
+              eventCancelEditBtn.style.display = "inline-block";
+            }
+          });
+
+          const deleteBtn = document.createElement("button");
+          deleteBtn.textContent = "Delete";
+          deleteBtn.type = "button";
+          deleteBtn.addEventListener("click", () => {
+            if (!confirm("Delete this event? This cannot be undone.")) return;
+            db.collection("events")
+              .doc(doc.id)
+              .delete()
+              .then(() => {
+                if (eventStatus) {
+                  eventStatus.textContent = "Event deleted.";
+                  eventStatus.style.color = "green";
+                }
+                loadEvents();
+              })
+              .catch((error) => {
+                console.error("Error deleting event:", error);
+                if (eventStatus) {
+                  eventStatus.textContent = "Could not delete event. Please try again.";
+                  eventStatus.style.color = "red";
+                }
+              });
+          });
+
+          actionsCell.appendChild(editBtn);
+          actionsCell.appendChild(deleteBtn);
+        } else {
+          actionsCell.textContent = "—";
+        }
+
+        row.appendChild(dateCell);
+        row.appendChild(titleCell);
+        row.appendChild(locationCell);
+        row.appendChild(actionsCell);
+
+        eventsBody.appendChild(row);
+      });
+    }
+
+    function renderTeam(snapshot) {
+      if (!teamBody) return;
+
+      teamBody.innerHTML = "";
+
+      if (snapshot.empty) {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+        cell.colSpan = 4;
+        cell.textContent = "No team members added yet.";
+        cell.style.padding = "0.75rem";
+        row.appendChild(cell);
+        teamBody.appendChild(row);
+        return;
+      }
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const row = document.createElement("tr");
+
+        const nameCell = document.createElement("td");
+        nameCell.textContent = data.name || "";
+        nameCell.style.padding = "0.5rem";
+
+        const roleCell = document.createElement("td");
+        roleCell.textContent = data.role || "";
+        roleCell.style.padding = "0.5rem";
+
+        const emailCell = document.createElement("td");
+        emailCell.textContent = data.email || "";
+        emailCell.style.padding = "0.5rem";
+
+        const actionsCell = document.createElement("td");
+        actionsCell.style.padding = "0.5rem";
+
+        if (isAdminUser) {
+          const editBtn = document.createElement("button");
+          editBtn.textContent = "Edit";
+          editBtn.type = "button";
+          editBtn.style.marginRight = "0.5rem";
+          editBtn.addEventListener("click", () => {
+            const nameInput = document.getElementById("team-name");
+            const roleInput = document.getElementById("team-role");
+            const emailInput = document.getElementById("team-email");
+            const bioInput = document.getElementById("team-bio");
+
+            if (nameInput) nameInput.value = data.name || "";
+            if (roleInput) roleInput.value = data.role || "";
+            if (emailInput) emailInput.value = data.email || "";
+            if (bioInput) bioInput.value = data.bio || "";
+
+            editingTeamId = doc.id;
+            if (teamStatus) {
+              teamStatus.textContent = "Editing team member. Save changes or cancel edit.";
+              teamStatus.style.color = "#333";
+            }
+            if (teamCancelEditBtn) {
+              teamCancelEditBtn.style.display = "inline-block";
+            }
+          });
+
+          const deleteBtn = document.createElement("button");
+          deleteBtn.textContent = "Delete";
+          deleteBtn.type = "button";
+          deleteBtn.addEventListener("click", () => {
+            if (!confirm("Delete this team member? This cannot be undone.")) return;
+            db.collection("team")
+              .doc(doc.id)
+              .delete()
+              .then(() => {
+                if (teamStatus) {
+                  teamStatus.textContent = "Team member deleted.";
+                  teamStatus.style.color = "green";
+                }
+                loadTeam();
+              })
+              .catch((error) => {
+                console.error("Error deleting team member:", error);
+                if (teamStatus) {
+                  teamStatus.textContent = "Could not delete team member. Please try again.";
+                  teamStatus.style.color = "red";
+                }
+              });
+          });
+
+          actionsCell.appendChild(editBtn);
+          actionsCell.appendChild(deleteBtn);
+        } else {
+          actionsCell.textContent = "—";
+        }
+
+        row.appendChild(nameCell);
+        row.appendChild(roleCell);
+        row.appendChild(emailCell);
+        row.appendChild(actionsCell);
+
+        teamBody.appendChild(row);
+      });
+    }
+
+    function renderAnnouncements(snapshot) {
+      if (!annBodyList) return;
+
+      annBodyList.innerHTML = "";
+
+      if (snapshot.empty) {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+        cell.colSpan = 3;
+        cell.textContent = "No announcements added yet.";
+        cell.style.padding = "0.75rem";
+        row.appendChild(cell);
+        annBodyList.appendChild(row);
+        return;
+      }
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const row = document.createElement("tr");
+
+        const dateCell = document.createElement("td");
+        dateCell.textContent = data.date || "";
+        dateCell.style.padding = "0.5rem";
+
+        const titleCell = document.createElement("td");
+        titleCell.textContent = data.title || "";
+        titleCell.style.padding = "0.5rem";
+
+        const actionsCell = document.createElement("td");
+        actionsCell.style.padding = "0.5rem";
+
+        if (isAdminUser) {
+          const editBtn = document.createElement("button");
+          editBtn.textContent = "Edit";
+          editBtn.type = "button";
+          editBtn.style.marginRight = "0.5rem";
+          editBtn.addEventListener("click", () => {
+            const titleInput = document.getElementById("ann-title");
+            const dateInput = document.getElementById("ann-date");
+            const bodyInput = document.getElementById("ann-body");
+
+            if (titleInput) titleInput.value = data.title || "";
+            if (dateInput) dateInput.value = data.date || "";
+            if (bodyInput) bodyInput.value = data.body || "";
+
+            editingAnnId = doc.id;
+            if (annStatus) {
+              annStatus.textContent = "Editing announcement. Save changes or cancel edit.";
+              annStatus.style.color = "#333";
+            }
+            if (annCancelEditBtn) {
+              annCancelEditBtn.style.display = "inline-block";
+            }
+          });
+
+          const deleteBtn = document.createElement("button");
+          deleteBtn.textContent = "Delete";
+          deleteBtn.type = "button";
+          deleteBtn.addEventListener("click", () => {
+            if (!confirm("Delete this announcement?")) return;
+            db.collection("announcements")
+              .doc(doc.id)
+              .delete()
+              .then(() => {
+                if (annStatus) {
+                  annStatus.textContent = "Announcement deleted.";
+                  annStatus.style.color = "green";
+                }
+                loadAnnouncements();
+              })
+              .catch((error) => {
+                console.error("Error deleting announcement:", error);
+                if (annStatus) {
+                  annStatus.textContent = "Could not delete announcement. Please try again.";
+                  annStatus.style.color = "red";
+                }
+              });
+          });
+
+          actionsCell.appendChild(editBtn);
+          actionsCell.appendChild(deleteBtn);
+        } else {
+          actionsCell.textContent = "—";
+        }
+
+        row.appendChild(dateCell);
+        row.appendChild(titleCell);
+        row.appendChild(actionsCell);
+
+        annBodyList.appendChild(row);
+      });
+    }
+
+    function renderPosts(snapshot) {
+      if (!postsBody) return;
+
+      postsBody.innerHTML = "";
+
+      if (snapshot.empty) {
+        const row = document.createElement("tr");
+        const cell = document.createElement("td");
+        cell.colSpan = 3;
+        cell.textContent = "No posts added yet.";
+        cell.style.padding = "0.75rem";
+        row.appendChild(cell);
+        postsBody.appendChild(row);
+        return;
+      }
+
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const row = document.createElement("tr");
+
+        const dateCell = document.createElement("td");
+        dateCell.textContent = data.date || "";
+        dateCell.style.padding = "0.5rem";
+
+        const titleCell = document.createElement("td");
+        titleCell.textContent = data.title || "";
+        titleCell.style.padding = "0.5rem";
+
+        const actionsCell = document.createElement("td");
+        actionsCell.style.padding = "0.5rem";
+
+        if (isAdminUser) {
+          const editBtn = document.createElement("button");
+          editBtn.textContent = "Edit";
+          editBtn.type = "button";
+          editBtn.style.marginRight = "0.5rem";
+          editBtn.addEventListener("click", () => {
+            const titleInput = document.getElementById("post-title");
+            const dateInput = document.getElementById("post-date");
+            const summaryInput = document.getElementById("post-summary");
+            const bodyInput = document.getElementById("post-body");
+
+            if (titleInput) titleInput.value = data.title || "";
+            if (dateInput) dateInput.value = data.date || "";
+            if (summaryInput) summaryInput.value = data.summary || "";
+            if (bodyInput) bodyInput.value = data.body || "";
+
+            editingPostId = doc.id;
+            if (postStatus) {
+              postStatus.textContent = "Editing post. Save changes or cancel edit.";
+              postStatus.style.color = "#333";
+            }
+            if (postCancelEditBtn) {
+              postCancelEditBtn.style.display = "inline-block";
+            }
+          });
+
+          const deleteBtn = document.createElement("button");
+          deleteBtn.textContent = "Delete";
+          deleteBtn.type = "button";
+          deleteBtn.addEventListener("click", () => {
+            if (!confirm("Delete this post?")) return;
+            db.collection("posts")
+              .doc(doc.id)
+              .delete()
+              .then(() => {
+                if (postStatus) {
+                  postStatus.textContent = "Post deleted.";
+                  postStatus.style.color = "green";
+                }
+                loadPosts();
+              })
+              .catch((error) => {
+                console.error("Error deleting post:", error);
+                if (postStatus) {
+                  postStatus.textContent = "Could not delete post. Please try again.";
+                  postStatus.style.color = "red";
+                }
+              });
+          });
+
+          actionsCell.appendChild(editBtn);
+          actionsCell.appendChild(deleteBtn);
+        } else {
+          actionsCell.textContent = "—";
+        }
+
+        row.appendChild(dateCell);
+        row.appendChild(titleCell);
+        row.appendChild(actionsCell);
+
+        postsBody.appendChild(row);
+      });
+    }
+
+    function loadEvents() {
+      if (!db) return;
+      db.collection("events")
+        .orderBy("date", "asc")
+        .get()
+        .then((snapshot) => {
+          renderEvents(snapshot);
+        })
+        .catch((error) => {
+          console.error("Error loading events:", error);
+          if (eventStatus) {
+            eventStatus.textContent = "Could not load events.";
+            eventStatus.style.color = "red";
+          }
+        });
+    }
+
+    function loadTeam() {
+      if (!db) return;
+      db.collection("team")
+        .orderBy("name", "asc")
+        .get()
+        .then((snapshot) => {
+          renderTeam(snapshot);
+        })
+        .catch((error) => {
+          console.error("Error loading team:", error);
+          if (teamStatus) {
+            teamStatus.textContent = "Could not load team.";
+            teamStatus.style.color = "red";
+          }
+        });
+    }
+
+    function loadAnnouncements() {
+      if (!db) return;
+      db.collection("announcements")
+        .orderBy("date", "desc")
+        .get()
+        .then((snapshot) => {
+          renderAnnouncements(snapshot);
+        })
+        .catch((error) => {
+          console.error("Error loading announcements:", error);
+          if (annStatus) {
+            annStatus.textContent = "Could not load announcements.";
+            annStatus.style.color = "red";
+          }
+        });
+    }
+
+    function loadPosts() {
+      if (!db) return;
+      db.collection("posts")
+        .orderBy("date", "desc")
+        .get()
+        .then((snapshot) => {
+          renderPosts(snapshot);
+        })
+        .catch((error) => {
+          console.error("Error loading posts:", error);
+          if (postStatus) {
+            postStatus.textContent = "Could not load posts.";
+            postStatus.style.color = "red";
+          }
+        });
+    }
+
+    function loadContactSettings() {
+      if (!db || !contactSettingsForm) return;
+      
+      db.collection("settings")
+        .doc("contact")
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            const data = doc.data();
+            const showFormCheckbox = document.getElementById("contact-show-form");
+            const nameInput = document.getElementById("contact-name-input");
+            const phoneInput = document.getElementById("contact-phone-input");
+            const emailInput = document.getElementById("contact-email-input");
+            const meetingLocationInput = document.getElementById("contact-meeting-location");
+            const mailingAddressInput = document.getElementById("contact-mailing-address");
+
+            if (showFormCheckbox) {
+              showFormCheckbox.checked = data.showForm === true;
+            }
+            if (nameInput && data.contactInfo) {
+              nameInput.value = data.contactInfo.name || "";
+            }
+            if (phoneInput && data.contactInfo) {
+              phoneInput.value = data.contactInfo.phone || "";
+            }
+            if (emailInput && data.contactInfo) {
+              emailInput.value = data.contactInfo.email || "";
+            }
+            if (meetingLocationInput && data.contactInfo) {
+              meetingLocationInput.value = data.contactInfo.meetingLocation || "";
+            }
+            if (mailingAddressInput && data.contactInfo) {
+              mailingAddressInput.value = data.contactInfo.mailingAddress || "";
+            }
+          } else {
+            // Set defaults
+            const showFormCheckbox = document.getElementById("contact-show-form");
+            if (showFormCheckbox) showFormCheckbox.checked = false;
+            
+            const nameInput = document.getElementById("contact-name-input");
+            const phoneInput = document.getElementById("contact-phone-input");
+            const emailInput = document.getElementById("contact-email-input");
+            const meetingLocationInput = document.getElementById("contact-meeting-location");
+            const mailingAddressInput = document.getElementById("contact-mailing-address");
+            
+            if (nameInput) nameInput.value = "Beth Wiseman";
+            if (phoneInput) phoneInput.value = "410-484-6866";
+            if (emailInput) emailInput.value = "bwiseman84@hotmail.com";
+            if (meetingLocationInput) meetingLocationInput.value = "611 Central Avenue, Towson, MD 21204";
+            if (mailingAddressInput) mailingAddressInput.value = "P.O. Box 262, Randallstown, MD 21133";
+          }
+        })
+        .catch((error) => {
+          console.error("Error loading contact settings:", error);
+        });
+    }
+
+    if (eventForm) {
+      eventForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (!isAdminUser) {
+          if (eventStatus) {
+            eventStatus.textContent = "Only the admin account can add or edit events.";
+            eventStatus.style.color = "red";
+          }
+          return;
+        }
+
+        try {
+          if (!db || !firebase || !firebase.firestore) {
+            throw new Error("Database is not available. Please refresh the page and try again.");
+          }
+
+          const titleInput = document.getElementById("event-title");
+          const dateInput = document.getElementById("event-date");
+          const timeInput = document.getElementById("event-time");
+          const locationInput = document.getElementById("event-location");
+          const notesInput = document.getElementById("event-notes");
+          const flyerUrlInput = document.getElementById("event-flyer-url");
+          const itemsInput = document.getElementById("event-items");
+
+          const title = titleInput ? titleInput.value.trim() : "";
+          const date = dateInput ? dateInput.value : "";
+          const time = timeInput ? timeInput.value.trim() : "";
+          const location = locationInput ? locationInput.value.trim() : "";
+          const notes = notesInput ? notesInput.value.trim() : "";
+          const flyerUrl = flyerUrlInput ? flyerUrlInput.value.trim() : "";
+          const itemsNeeded = itemsInput ? itemsInput.value.trim() : "";
+
+          if (!title || !date || !location) {
+            if (eventStatus) {
+              eventStatus.textContent = "Please enter at least a title, date, and location.";
+              eventStatus.style.color = "red";
+            }
+            return;
+          }
+
+          if (eventStatus) {
+            eventStatus.textContent = "Saving event…";
+            eventStatus.style.color = "#333";
+          }
+
+          const payload = {
+            title,
+            date,
+            time,
+            location,
+            notes,
+            flyerUrl,
+            itemsNeeded,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+          };
+
+          let writePromise;
+          if (editingEventId) {
+            writePromise = db.collection("events").doc(editingEventId).update(payload);
+          } else {
+            payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+            writePromise = db.collection("events").add(payload);
+          }
+
+          writePromise
+            .then(() => {
+              if (eventStatus) {
+                eventStatus.textContent = editingEventId ? "Event updated." : "Event added.";
+                eventStatus.style.color = "green";
+              }
+              eventForm.reset();
+              editingEventId = null;
+              if (eventCancelEditBtn) {
+                eventCancelEditBtn.style.display = "none";
+              }
+              loadEvents();
+            })
+            .catch((error) => {
+              console.error("Error saving event:", error);
+              if (eventStatus) {
+                eventStatus.textContent = "Could not save event. Please try again.";
+                eventStatus.style.color = "red";
+              }
+            });
+        } catch (err) {
+          console.error("Unexpected error in event save handler:", err);
+          if (eventStatus) {
+            eventStatus.textContent = err.message || "Unexpected error. Please try again.";
+            eventStatus.style.color = "red";
+          }
+        }
+      });
+    }
+
+    if (eventCancelEditBtn) {
+      eventCancelEditBtn.addEventListener("click", () => {
+        if (eventForm) {
+          eventForm.reset();
+        }
+        editingEventId = null;
+        if (eventStatus) {
+          eventStatus.textContent = "Edit cancelled.";
+          eventStatus.style.color = "#333";
+        }
+        eventCancelEditBtn.style.display = "none";
+      });
+    }
+
+    if (teamForm) {
+      teamForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (!isAdminUser) {
+          if (teamStatus) {
+            teamStatus.textContent = "Only the admin account can add or edit team members.";
+            teamStatus.style.color = "red";
+          }
+          return;
+        }
+
+        const nameInput = document.getElementById("team-name");
+        const roleInput = document.getElementById("team-role");
+        const emailInput = document.getElementById("team-email");
+        const bioInput = document.getElementById("team-bio");
+
+        const name = nameInput ? nameInput.value.trim() : "";
+        const role = roleInput ? roleInput.value.trim() : "";
+        const email = emailInput ? emailInput.value.trim() : "";
+        const bio = bioInput ? bioInput.value.trim() : "";
+
+        if (!name || !role) {
+          if (teamStatus) {
+            teamStatus.textContent = "Please enter a name and role.";
+            teamStatus.style.color = "red";
+          }
+          return;
+        }
+
+        if (teamStatus) {
+          teamStatus.textContent = "Saving team member…";
+          teamStatus.style.color = "#333";
+        }
+
+        const payload = {
+          name,
+          role,
+          email,
+          bio,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        };
+
+        let writePromise;
+        if (editingTeamId) {
+          writePromise = db.collection("team").doc(editingTeamId).update(payload);
+        } else {
+          payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+          writePromise = db.collection("team").add(payload);
+        }
+
+        writePromise
+          .then(() => {
+            if (teamStatus) {
+              teamStatus.textContent = editingTeamId ? "Team member updated." : "Team member added.";
+              teamStatus.style.color = "green";
+            }
+            teamForm.reset();
+            editingTeamId = null;
+            if (teamCancelEditBtn) {
+              teamCancelEditBtn.style.display = "none";
+            }
+            loadTeam();
+          })
+          .catch((error) => {
+            console.error("Error saving team member:", error);
+            if (teamStatus) {
+              teamStatus.textContent = "Could not save team member. Please try again.";
+              teamStatus.style.color = "red";
+            }
+          });
+      });
+    }
+
+    if (teamCancelEditBtn) {
+      teamCancelEditBtn.addEventListener("click", () => {
+        if (teamForm) {
+          teamForm.reset();
+        }
+        editingTeamId = null;
+        if (teamStatus) {
+          teamStatus.textContent = "Edit cancelled.";
+          teamStatus.style.color = "#333";
+        }
+        teamCancelEditBtn.style.display = "none";
+      });
+    }
+
+    if (annForm) {
+      annForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (!isAdminUser) {
+          if (annStatus) {
+            annStatus.textContent = "Only the admin account can add or edit announcements.";
+            annStatus.style.color = "red";
+          }
+          return;
+        }
+
+        const titleInput = document.getElementById("ann-title");
+        const dateInput = document.getElementById("ann-date");
+        const bodyInput = document.getElementById("ann-body");
+
+        const title = titleInput ? titleInput.value.trim() : "";
+        const date = dateInput ? dateInput.value : "";
+        const body = bodyInput ? bodyInput.value.trim() : "";
+
+        if (!title || !date || !body) {
+          if (annStatus) {
+            annStatus.textContent = "Please enter a title, date, and message.";
+            annStatus.style.color = "red";
+          }
+          return;
+        }
+
+        if (annStatus) {
+          annStatus.textContent = "Saving announcement…";
+          annStatus.style.color = "#333";
+        }
+
+        const payload = {
+          title,
+          date,
+          body,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        };
+
+        let writePromise;
+        if (editingAnnId) {
+          writePromise = db.collection("announcements").doc(editingAnnId).update(payload);
+        } else {
+          payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+          writePromise = db.collection("announcements").add(payload);
+        }
+
+        writePromise
+          .then(() => {
+            if (annStatus) {
+              annStatus.textContent = editingAnnId ? "Announcement updated." : "Announcement added.";
+              annStatus.style.color = "green";
+            }
+            annForm.reset();
+            editingAnnId = null;
+            if (annCancelEditBtn) {
+              annCancelEditBtn.style.display = "none";
+            }
+            loadAnnouncements();
+          })
+          .catch((error) => {
+            console.error("Error saving announcement:", error);
+            if (annStatus) {
+              annStatus.textContent = "Could not save announcement. Please try again.";
+              annStatus.style.color = "red";
+            }
+          });
+      });
+    }
+
+    if (annCancelEditBtn) {
+      annCancelEditBtn.addEventListener("click", () => {
+        if (annForm) {
+          annForm.reset();
+        }
+        editingAnnId = null;
+        if (annStatus) {
+          annStatus.textContent = "Edit cancelled.";
+          annStatus.style.color = "#333";
+        }
+        annCancelEditBtn.style.display = "none";
+      });
+    }
+
+    if (postForm) {
+      postForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (!isAdminUser) {
+          if (postStatus) {
+            postStatus.textContent = "Only the admin account can add or edit posts.";
+            postStatus.style.color = "red";
+          }
+          return;
+        }
+
+        const titleInput = document.getElementById("post-title");
+        const dateInput = document.getElementById("post-date");
+        const summaryInput = document.getElementById("post-summary");
+        const bodyInput = document.getElementById("post-body");
+
+        const title = titleInput ? titleInput.value.trim() : "";
+        const date = dateInput ? dateInput.value : "";
+        const summary = summaryInput ? summaryInput.value.trim() : "";
+        const body = bodyInput ? bodyInput.value.trim() : "";
+
+        if (!title || !date || !body) {
+          if (postStatus) {
+            postStatus.textContent = "Please enter a title, date, and content.";
+            postStatus.style.color = "red";
+          }
+          return;
+        }
+
+        if (postStatus) {
+          postStatus.textContent = "Saving post…";
+          postStatus.style.color = "#333";
+        }
+
+        const payload = {
+          title,
+          date,
+          summary,
+          body,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+        };
+
+        let writePromise;
+        if (editingPostId) {
+          writePromise = db.collection("posts").doc(editingPostId).update(payload);
+        } else {
+          payload.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+          writePromise = db.collection("posts").add(payload);
+        }
+
+        writePromise
+          .then(() => {
+            if (postStatus) {
+              postStatus.textContent = editingPostId ? "Post updated." : "Post added.";
+              postStatus.style.color = "green";
+            }
+            postForm.reset();
+            editingPostId = null;
+            if (postCancelEditBtn) {
+              postCancelEditBtn.style.display = "none";
+            }
+            loadPosts();
+          })
+          .catch((error) => {
+            console.error("Error saving post:", error);
+            if (postStatus) {
+              postStatus.textContent = "Could not save post. Please try again.";
+              postStatus.style.color = "red";
+            }
+          });
+      });
+    }
+
+    if (postCancelEditBtn) {
+      postCancelEditBtn.addEventListener("click", () => {
+        if (postForm) {
+          postForm.reset();
+        }
+        editingPostId = null;
+        if (postStatus) {
+          postStatus.textContent = "Edit cancelled.";
+          postStatus.style.color = "#333";
+        }
+        postCancelEditBtn.style.display = "none";
+      });
+    }
+
+    // Contact settings form handler
+    if (contactSettingsForm) {
+      contactSettingsForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (!isAdminUser) {
+          if (contactSettingsStatus) {
+            contactSettingsStatus.textContent = "Only the admin account can update contact settings.";
+            contactSettingsStatus.style.color = "red";
+          }
+          return;
+        }
+
+        try {
+          if (!db || !firebase || !firebase.firestore) {
+            throw new Error("Database is not available. Please refresh the page and try again.");
+          }
+
+          const showFormCheckbox = document.getElementById("contact-show-form");
+          const nameInput = document.getElementById("contact-name-input");
+          const phoneInput = document.getElementById("contact-phone-input");
+          const emailInput = document.getElementById("contact-email-input");
+          const meetingLocationInput = document.getElementById("contact-meeting-location");
+          const mailingAddressInput = document.getElementById("contact-mailing-address");
+
+          const showForm = showFormCheckbox ? showFormCheckbox.checked : false;
+          const contactInfo = {
+            name: nameInput ? nameInput.value.trim() : "",
+            phone: phoneInput ? phoneInput.value.trim() : "",
+            email: emailInput ? emailInput.value.trim() : "",
+            meetingLocation: meetingLocationInput ? meetingLocationInput.value.trim() : "",
+            mailingAddress: mailingAddressInput ? mailingAddressInput.value.trim() : ""
+          };
+
+          if (contactSettingsStatus) {
+            contactSettingsStatus.textContent = "Saving contact settings…";
+            contactSettingsStatus.style.color = "#333";
+          }
+
+          const payload = {
+            showForm,
+            contactInfo,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          };
+
+          db.collection("settings")
+            .doc("contact")
+            .set(payload, { merge: true })
+            .then(() => {
+              if (contactSettingsStatus) {
+                contactSettingsStatus.textContent = "Contact settings saved.";
+                contactSettingsStatus.style.color = "green";
+              }
+            })
+            .catch((error) => {
+              console.error("Error saving contact settings:", error);
+              if (contactSettingsStatus) {
+                contactSettingsStatus.textContent = "Could not save contact settings. Please try again.";
+                contactSettingsStatus.style.color = "red";
+              }
+            });
+        } catch (err) {
+          console.error("Unexpected error in contact settings save handler:", err);
+          if (contactSettingsStatus) {
+            contactSettingsStatus.textContent = err.message || "Unexpected error. Please try again.";
+            contactSettingsStatus.style.color = "red";
+          }
+        }
+      });
+    }
+
     if (logoutBtn) {
       logoutBtn.addEventListener("click", () => {
         auth
@@ -175,6 +1409,19 @@
       });
     }
 
+    // Admin menu scroll
+    const adminMenuButtons = document.querySelectorAll(".admin-menu button[data-admin-target]");
+    adminMenuButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const targetId = btn.getAttribute("data-admin-target");
+        if (!targetId) return;
+        const section = document.getElementById(targetId);
+        if (section) {
+          section.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    });
+
     // Require login to view this page
     auth.onAuthStateChanged((user) => {
       if (!user) {
@@ -185,15 +1432,32 @@
         if (registrationsBody) {
           registrationsBody.innerHTML = "";
         }
-        // Optionally redirect to login page after a short delay
+        if (eventsBody) {
+          eventsBody.innerHTML = "";
+        }
+        // Redirect to login page after a short delay
         setTimeout(() => {
           window.location.href = "login.html";
         }, 2000);
         return;
       }
 
+      isAdminUser = !!user.email && user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+
+      if (eventsAdminNote) {
+        if (isAdminUser) {
+          eventsAdminNote.textContent = "You are signed in as the admin. Use the form below to add or edit events.";
+          eventsAdminNote.style.color = "#333";
+        } else {
+          eventsAdminNote.textContent =
+            "You are signed in, but only the main admin account can add or edit events.";
+          eventsAdminNote.style.color = "#a33";
+        }
+      }
+
       if (adminStatus) {
-        adminStatus.textContent = "Signed in as " + (user.email || "admin") + ". Loading registrations…";
+        adminStatus.textContent =
+          "Signed in as " + (user.email || "admin") + ". Loading registrations and events…";
         adminStatus.style.color = "#333";
       }
 
@@ -202,7 +1466,8 @@
         .get()
         .then((snapshot) => {
           if (adminStatus) {
-            adminStatus.textContent = "Showing people who registered. 'Last Login' shows who has logged in.";
+            adminStatus.textContent =
+              "Showing people who registered. 'Last Login' shows who has logged in. Events are listed below.";
             adminStatus.style.color = "#333";
           }
           renderRegistrations(snapshot);
@@ -214,6 +1479,9 @@
             adminStatus.style.color = "red";
           }
         });
+
+      loadEvents();
+      loadContactSettings();
     });
   </script>
 </body>

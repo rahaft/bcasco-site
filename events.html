@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Events | Patapsco Senior Citizens</title>
+  <title>Events | BCASCO</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="site-header">
     <div class="container header-inner">
       <div class="logo">
-        <a href="index.html" class="logo-main">Patapsco Seniors</a>
-        <span class="logo-sub">Community &amp; Activities</span>
+        <a href="index.html" class="logo-main">BCASCO</a>
+        <span class="logo-sub">Baltimore County Association of<br>Senior Citizens Organizations</span>
       </div>
       <button class="nav-toggle" aria-label="Toggle navigation">
         ☰
@@ -20,15 +20,11 @@
         <ul>
           <li><a href="events.html">Events</a></li>
           <li><a href="contact.html">Contact</a></li>
-          <li><a href="blog.html">Blog</a></li>
+          <li><a href="about-us.html">About</a></li>
           <li class="has-dropdown">
-            <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
-              About ▾
-            </button>
+            <a href="register.html" class="dropdown-toggle">Subscribe</a>
             <ul class="dropdown-menu">
-              <li><a href="about-charter.html">Charter</a></li>
-              <li><a href="about-us.html">About Us</a></li>
-              <li><a href="join.html">Join / Membership</a></li>
+              <li><a href="register.html?subject=Unsubscribe">Unsubscribe</a></li>
             </ul>
           </li>
           <li><a href="login.html">Login</a></li>
@@ -47,33 +43,62 @@
 
     <section class="page-section">
       <div class="container">
-        <div class="card-list">
-          <article class="card">
-            <h2 class="card-title">Monthly Social Lunch</h2>
-            <p class="card-meta">First Tuesday of every month &middot; 12:00 PM &middot; Community Hall</p>
-            <p>
-              Join us for a relaxed lunch with friends, conversation, and light
-              entertainment. Please call ahead if you need transportation.
-            </p>
-          </article>
+        <div class="card" style="margin-bottom: 2rem;">
+          <h2>BCASCO Calendar 2025-2026</h2>
+          <p style="margin-bottom: 1rem;">
+            <strong>Baltimore County Association of Senior Citizens Organizations, Inc.</strong><br>
+            611 Central Avenue · Towson, MD 21204
+          </p>
+          <p style="margin-bottom: 1rem;">
+            BCASCO is an educational and advocacy organization for seniors celebrating 47 years of service this year.
+          </p>
+          <div id="bcasco-flyer-container" style="text-align: center; margin: 1.5rem 0;">
+            <!-- Flyer image will be loaded here if available -->
+            <!-- To add the flyer: 
+                 1. Save the flyer image as 'bcasco-calendar-2025-2026.jpg' (or .png) in the project root
+                 2. Or upload to Firebase Storage and update the image source below
+            -->
+            <img 
+              id="bcasco-flyer-image" 
+              src="bcasco-calendar-2025-2026.jpg" 
+              alt="BCASCO Calendar 2025-2026" 
+              style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; display: none;"
+              onerror="this.style.display='none';"
+            />
+          </div>
+          <script>
+            // Show image if it loads successfully
+            const flyerImg = document.getElementById("bcasco-flyer-image");
+            if (flyerImg) {
+              flyerImg.onload = function() {
+                this.style.display = "block";
+              };
+            }
+          </script>
+          <div style="background-color: #f5f5f5; padding: 1.5rem; border-radius: 4px; margin-top: 1rem;">
+            <p style="margin: 0 0 0.75rem 0;"><strong>Event Schedule:</strong></p>
+            <p style="margin: 0.5rem 0;"><strong>Time:</strong> 10:00 AM - 12:00 Noon</p>
+            <p style="margin: 0.5rem 0;"><strong>Location:</strong> Randallstown Community Center, 3505 Resource Drive, Randallstown, 21133</p>
+            <p style="margin: 0.5rem 0;"><strong>Networking:</strong> 9:30 AM</p>
+          </div>
+          <p style="margin-top: 1rem; font-size: 0.95rem;">
+            <strong>Contact:</strong> Beth Wiseman, <a href="tel:+14104846866">410-484-6866</a> or 
+            <span class="email-obfuscate"><span>bwiseman</span><span>84</span><span>@</span><span>hotmail</span><span>.</span><span>com</span></span>
+          </p>
+        </div>
 
-          <article class="card">
-            <h2 class="card-title">Gentle Exercise Class</h2>
-            <p class="card-meta">Every Thursday &middot; 10:00 AM &middot; Activity Room</p>
-            <p>
-              A chair-based exercise class designed for all ability levels. Wear
-              comfortable clothes and supportive shoes.
-            </p>
-          </article>
+        <h2 style="margin-bottom: 1.5rem;">Upcoming Events</h2>
+        <div id="events-container" class="card-list">
+          <div style="text-align: center; padding: 2rem;">
+            <p>Loading events...</p>
+          </div>
+        </div>
 
-          <article class="card">
-            <h2 class="card-title">Game Afternoon</h2>
-            <p class="card-meta">Third Friday of every month &middot; 1:00 PM &middot; Lounge</p>
-            <p>
-              Cards, board games, and puzzles. Bring a friend or meet someone
-              new. Light refreshments provided.
-            </p>
-          </article>
+        <h2 style="margin-top: 3rem; margin-bottom: 1.5rem;">Past Events</h2>
+        <div id="past-events-container" class="card-list">
+          <div style="text-align: center; padding: 2rem;">
+            <p>Loading past events...</p>
+          </div>
         </div>
       </div>
     </section>
@@ -84,16 +109,286 @@
       <div>
         <p class="footer-heading">Contact the President</p>
         <p><strong>Beth Wiseman</strong></p>
-        <p>Phone: <a href="tel:+13011234567">(301) 123-4567</a></p>
+        <p>Phone: <a href="tel:+14104846866">410-484-6866</a></p>
         <p>Email: first.part[at]domain[dot]com</p>
       </div>
       <div class="footer-small">
-        <p>© <span id="year"></span> Patapsco Senior Citizens. All rights reserved.</p>
+        <p>© <span id="year"></span> BCASCO. All rights reserved.</p>
+        <p id="version-info" style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.7;">
+          Version: <span id="version-number">Loading...</span>
+        </p>
       </div>
     </div>
   </footer>
 
+  <!-- Firebase + Firestore -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-init.js"></script>
   <script src="main.js"></script>
+  <script src="inline-edit.js"></script>
+  <script src="event-editor.js"></script>
+  <script>
+    const eventsContainer = document.getElementById("events-container");
+    const pastEventsContainer = document.getElementById("past-events-container");
+    const flyerContainer = document.getElementById("bcasco-flyer-container");
+
+    function formatDate(dateValue) {
+      if (!dateValue) return "";
+      
+      // Handle Firestore Timestamp
+      let date;
+      if (dateValue.toDate) {
+        date = dateValue.toDate();
+      } else if (dateValue instanceof Date) {
+        date = dateValue;
+      } else if (typeof dateValue === "string") {
+        date = new Date(dateValue);
+      } else {
+        return dateValue;
+      }
+
+      if (isNaN(date.getTime())) return dateValue;
+
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      return date.toLocaleDateString("en-US", options);
+    }
+
+    function formatEventDate(dateString) {
+      if (!dateString) return "";
+      const date = new Date(dateString + "T00:00:00");
+      if (isNaN(date.getTime())) return dateString;
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      return date.toLocaleDateString("en-US", options);
+    }
+
+    function createEventCard(data) {
+      const eventCard = document.createElement("article");
+      eventCard.className = "card";
+
+      const title = document.createElement("h2");
+      title.className = "card-title";
+      title.textContent = data.title || "Untitled Event";
+
+      const meta = document.createElement("p");
+      meta.className = "card-meta";
+      const metaParts = [];
+      
+      if (data.date) {
+        metaParts.push(formatEventDate(data.date));
+      }
+      if (data.time) {
+        metaParts.push(data.time);
+      }
+      if (data.location) {
+        metaParts.push(data.location);
+      }
+      meta.textContent = metaParts.join(" · ");
+
+      const description = document.createElement("p");
+      description.textContent = data.notes || "";
+
+      eventCard.appendChild(title);
+      eventCard.appendChild(meta);
+      if (data.notes) {
+        eventCard.appendChild(description);
+      }
+
+      // Add flyer link if available
+      if (data.flyerUrl) {
+        const flyerLink = document.createElement("p");
+        flyerLink.style.marginTop = "0.75rem";
+        const link = document.createElement("a");
+        link.href = data.flyerUrl;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = "View Event Flyer →";
+        link.style.color = "#0066cc";
+        flyerLink.appendChild(link);
+        eventCard.appendChild(flyerLink);
+      }
+
+      // Add Sign Up button
+      const buttonContainer = document.createElement("div");
+      buttonContainer.style.marginTop = "1.5rem";
+      buttonContainer.style.display = "flex";
+      buttonContainer.style.gap = "1rem";
+      buttonContainer.style.justifyContent = "center";
+      buttonContainer.style.flexWrap = "wrap";
+
+      const signupBtn = document.createElement("a");
+      signupBtn.href = "register.html";
+      signupBtn.className = "event-action-btn event-signup-btn";
+      signupBtn.textContent = "Sign Up for Updates";
+      signupBtn.style.padding = "0.75rem 1.5rem";
+      signupBtn.style.borderRadius = "999px";
+      signupBtn.style.border = "2px solid #1f6fb2";
+      signupBtn.style.backgroundColor = "transparent";
+      signupBtn.style.color = "#1f6fb2";
+      signupBtn.style.fontWeight = "600";
+      signupBtn.style.textDecoration = "none";
+      signupBtn.style.fontSize = "1rem";
+      signupBtn.style.cursor = "pointer";
+      signupBtn.style.display = "inline-block";
+
+      buttonContainer.appendChild(signupBtn);
+      eventCard.appendChild(buttonContainer);
+
+      return eventCard;
+    }
+
+    function loadEvents() {
+      if (!db) {
+        if (eventsContainer) {
+          eventsContainer.innerHTML = '<div style="text-align: center; padding: 2rem;"><p style="color: red;">Unable to load events. Please refresh the page.</p></div>';
+        }
+        return;
+      }
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const todayStr = today.toISOString().split('T')[0];
+
+      const pastEventsContainer = document.getElementById("past-events-container");
+
+      // Load upcoming events
+      db.collection("events")
+        .orderBy("date", "asc")
+        .where("date", ">=", todayStr)
+        .get()
+        .then((upcomingSnapshot) => {
+          if (!eventsContainer) return;
+
+          if (upcomingSnapshot.empty) {
+            eventsContainer.innerHTML = '<div style="text-align: center; padding: 2rem;"><p>No upcoming events scheduled at this time. Please check back soon!</p></div>';
+          } else {
+            eventsContainer.innerHTML = "";
+            upcomingSnapshot.forEach((doc) => {
+              const data = doc.data();
+              // Only show events with valid dates
+              if (data.date && data.date.trim() !== "") {
+                const card = createEventCard(data);
+                card.setAttribute("data-event-id", doc.id);
+                eventsContainer.appendChild(card);
+              }
+            });
+          }
+
+          // Load past events
+          return db.collection("events")
+            .orderBy("date", "desc")
+            .where("date", "<", todayStr)
+            .get();
+        })
+        .then((pastSnapshot) => {
+          if (!pastEventsContainer) return;
+
+          if (pastSnapshot.empty) {
+            pastEventsContainer.innerHTML = '<div style="text-align: center; padding: 2rem;"><p>No past events to display.</p></div>';
+          } else {
+            pastEventsContainer.innerHTML = "";
+            pastSnapshot.forEach((doc) => {
+              const data = doc.data();
+              // Only show events with valid dates
+              if (data.date && data.date.trim() !== "") {
+                const card = createEventCard(data);
+                card.setAttribute("data-event-id", doc.id);
+                pastEventsContainer.appendChild(card);
+              }
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Error loading events:", error);
+          // If query fails (e.g., due to missing date field), try loading all events and filtering client-side
+          if (error.code === 'failed-precondition' || error.message.includes('index')) {
+            // Fallback: load all events and filter client-side
+            db.collection("events")
+              .get()
+              .then((allSnapshot) => {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const todayStr = today.toISOString().split('T')[0];
+                
+                const upcoming = [];
+                const past = [];
+                
+                allSnapshot.forEach((doc) => {
+                  const data = doc.data();
+                  // Skip events without valid dates
+                  if (!data.date || data.date.trim() === "") {
+                    return;
+                  }
+                  
+                  if (data.date >= todayStr) {
+                    upcoming.push({ id: doc.id, ...data });
+                  } else {
+                    past.push({ id: doc.id, ...data });
+                  }
+                });
+                
+                // Sort and display
+                upcoming.sort((a, b) => a.date.localeCompare(b.date));
+                past.sort((a, b) => b.date.localeCompare(a.date));
+                
+                if (eventsContainer) {
+                  if (upcoming.length === 0) {
+                    eventsContainer.innerHTML = '<div style="text-align: center; padding: 2rem;"><p>No upcoming events scheduled at this time. Please check back soon!</p></div>';
+                  } else {
+                    eventsContainer.innerHTML = "";
+                    upcoming.forEach((data) => {
+                      eventsContainer.appendChild(createEventCard(data));
+                    });
+                  }
+                }
+                
+                if (pastEventsContainer) {
+                  if (past.length === 0) {
+                    pastEventsContainer.innerHTML = '<div style="text-align: center; padding: 2rem;"><p>No past events to display.</p></div>';
+                  } else {
+                    pastEventsContainer.innerHTML = "";
+                    past.forEach((data) => {
+                      pastEventsContainer.appendChild(createEventCard(data));
+                    });
+                  }
+                }
+              })
+              .catch((fallbackError) => {
+                console.error("Error in fallback event loading:", fallbackError);
+                if (eventsContainer) {
+                  eventsContainer.innerHTML = '<div style="text-align: center; padding: 2rem;"><p style="color: red;">Unable to load events. Please try again later.</p></div>';
+                }
+              });
+          } else {
+            if (eventsContainer) {
+              eventsContainer.innerHTML = '<div style="text-align: center; padding: 2rem;"><p style="color: red;">Unable to load events. Please try again later.</p></div>';
+            }
+          }
+        });
+    }
+
+    // Make email addresses clickable (reconstruct from obfuscated spans)
+    function makeEmailsClickable() {
+      const emailElements = document.querySelectorAll(".email-obfuscate");
+      emailElements.forEach((el) => {
+        const parts = Array.from(el.querySelectorAll("span")).map((span) => span.textContent);
+        const email = parts.join("");
+        el.innerHTML = `<a href="mailto:${email}">${email}</a>`;
+      });
+    }
+
+    // Load events when page is ready
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", () => {
+        loadEvents();
+        makeEmailsClickable();
+      });
+    } else {
+      loadEvents();
+      makeEmailsClickable();
+    }
+  </script>
 </body>
 </html>
 

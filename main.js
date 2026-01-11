@@ -6,12 +6,43 @@ document.addEventListener("DOMContentLoaded", () => {
     yearSpan.textContent = new Date().getFullYear().toString();
   }
 
-  // Scroll from hero to action section
+  // Load version information (if version element exists)
+  const versionEl = document.getElementById("version-number");
+  if (versionEl) {
+    // Set a default immediately so it doesn't show "Loading..."
+    const buildDate = new Date().toISOString().split("T")[0];
+    versionEl.textContent = `1.0.0 - ${buildDate}`;
+    
+    // Then try to load the actual version
+    fetch("version.json")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        let versionText = data.version || "1.0.0";
+        if (data.commit) {
+          versionText += ` (${data.commit.substring(0, 7)})`;
+        }
+        if (data.buildDate) {
+          versionText += ` - ${data.buildDate}`;
+        }
+        versionEl.textContent = versionText;
+      })
+      .catch((error) => {
+        console.error("Error loading version.json:", error);
+        // Keep the fallback that was already set
+      });
+  }
+
+  // Scroll from hero to events section (if scroll button exists)
   const scrollBtn = document.getElementById("scrollToActions");
-  const actionsSection = document.getElementById("actions");
-  if (scrollBtn && actionsSection) {
+  const eventsSection = document.getElementById("events-scroll");
+  if (scrollBtn && eventsSection) {
     scrollBtn.addEventListener("click", () => {
-      actionsSection.scrollIntoView({ behavior: "smooth" });
+      eventsSection.scrollIntoView({ behavior: "smooth" });
     });
   }
 
@@ -55,27 +86,54 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // About dropdown
-  const dropdownToggle = document.querySelector(".dropdown-toggle");
-  const dropdownMenu = document.querySelector(".dropdown-menu");
+  // Dropdown menus (for mobile, always show; desktop uses hover via CSS)
+  const dropdownToggles = document.querySelectorAll(".dropdown-toggle");
 
-  if (dropdownToggle && dropdownMenu) {
-    dropdownToggle.addEventListener("click", () => {
-      const isOpen = dropdownMenu.classList.toggle("show");
-      dropdownToggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
-    });
+  dropdownToggles.forEach((toggle) => {
+    const dropdownContainer = toggle.closest(".has-dropdown");
+    const menu = dropdownContainer?.querySelector(".dropdown-menu");
+    if (!menu) return;
 
-    // Close dropdown when clicking outside (desktop)
+    // On mobile, always show the dropdown menu (no toggle needed)
+    if (window.innerWidth <= 720) {
+      menu.classList.add("show");
+      toggle.setAttribute("aria-expanded", "true");
+      // Prevent default link behavior on mobile for the toggle
+      toggle.addEventListener("click", (e) => {
+        e.preventDefault();
+      });
+    }
+
+    // On desktop, allow normal link behavior (hover will show dropdown)
+    // Close dropdown when clicking outside (mobile only - but menu is always visible on mobile)
     document.addEventListener("click", (event) => {
-      if (
-        !dropdownMenu.contains(event.target) &&
-        !dropdownToggle.contains(event.target)
-      ) {
-        dropdownMenu.classList.remove("show");
-        dropdownToggle.setAttribute("aria-expanded", "false");
+      if (window.innerWidth > 720) {
+        if (
+          !menu.contains(event.target) &&
+          !toggle.contains(event.target) &&
+          !dropdownContainer.contains(event.target)
+        ) {
+          menu.classList.remove("show");
+          toggle.setAttribute("aria-expanded", "false");
+        }
       }
     });
-  }
+  });
+  
+  // Handle window resize to update dropdown visibility
+  window.addEventListener("resize", () => {
+    dropdownToggles.forEach((toggle) => {
+      const dropdownContainer = toggle.closest(".has-dropdown");
+      const menu = dropdownContainer?.querySelector(".dropdown-menu");
+      if (!menu) return;
+      
+      if (window.innerWidth <= 720) {
+        menu.classList.add("show");
+        toggle.setAttribute("aria-expanded", "true");
+      } else {
+        menu.classList.remove("show");
+        toggle.setAttribute("aria-expanded", "false");
+      }
+    });
+  });
 });
-
-

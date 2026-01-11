@@ -1,0 +1,55 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Events - public read, public create, admin update/delete
+    match /events/{eventId} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if request.auth != null;
+    }
+    
+    // Settings - public read, admin write
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Announcements - public read, admin write
+    match /announcements/{announcementId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Posts - public read, admin write
+    match /posts/{postId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Team - public read, admin write
+    match /team/{teamId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+    
+    // Registrations - public write (for registration form), admin read
+    match /registrations/{registrationId} {
+      allow read: if request.auth != null;
+      allow create: if true;
+      allow update, delete: if request.auth != null;
+    }
+    
+    // Contact messages - public write (for contact form), admin read
+    match /contactMessages/{messageId} {
+      allow read: if request.auth != null;
+      allow create: if true;
+      allow update, delete: if request.auth != null;
+    }
+    
+    // Page content for inline editing - public read, admin write
+    match /pageContent/{contentId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+  }
+}

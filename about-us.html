@@ -11,7 +11,7 @@
     <div class="container header-inner">
       <div class="logo">
         <a href="index.html" class="logo-main">BCASCO</a>
-        <span class="logo-sub">Baltimore County Association of Senior Citizens Organizations</span>
+        <span class="logo-sub">Baltimore County Association of<br>Senior Citizens Organizations</span>
       </div>
       <button class="nav-toggle" aria-label="Toggle navigation">
         ☰
@@ -20,15 +20,11 @@
         <ul>
           <li><a href="events.html">Events</a></li>
           <li><a href="contact.html">Contact</a></li>
-          <li><a href="blog.html">Blog</a></li>
+          <li><a href="about-us.html">About</a></li>
           <li class="has-dropdown">
-            <button class="dropdown-toggle" aria-haspopup="true" aria-expanded="false">
-              About ▾
-            </button>
+            <a href="register.html" class="dropdown-toggle">Subscribe</a>
             <ul class="dropdown-menu">
-              <li><a href="about-charter.html">Charter</a></li>
-              <li><a href="about-us.html">About Us</a></li>
-              <li><a href="join.html">Join / Membership</a></li>
+              <li><a href="register.html?subject=Unsubscribe">Unsubscribe</a></li>
             </ul>
           </li>
           <li><a href="login.html">Login</a></li>
@@ -56,7 +52,7 @@
           <p>
             Our goal is to provide a better quality of life for all people. We seek, for instance,
             better education, housing, and health care for the old, for the poor, as well as for
-            the wealthy. We welcome into membership any like-minded organizations and individuals.
+            the wealthy. We welcome any like-minded organizations and individuals.
           </p>
           <p>
             Our history dates back to the Seventies, when a small group of people had an idea.
@@ -81,11 +77,26 @@
           </p>
         </div>
 
-        <div class="card">
-          <h2>Contact & Location</h2>
+        <div class="card" id="location">
+          <h2>Contact &amp; Location</h2>
           <p><strong>BCASCO &mdash; Baltimore County Association of Senior Citizens Organizations</strong></p>
           <p>611 Central Avenue<br />Towson, MD</p>
           <p>Mailing Address:<br />P.O. Box 262<br />Randallstown, MD 21133</p>
+          <div class="map-embed">
+            <iframe
+              title="BCASCO meeting location map"
+              loading="lazy"
+              allowfullscreen
+              referrerpolicy="no-referrer-when-downgrade"
+              allow="accelerometer; gyroscope"
+              src="https://www.google.com/maps?q=611+Central+Avenue+Towson+MD&output=embed"
+            ></iframe>
+            <p style="margin-top: 0.5rem;">
+              <a href="https://maps.app.goo.gl/7jAiu4x5NNUaLAni8" target="_blank" rel="noopener">
+                Open location in Google Maps
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </section>
@@ -96,11 +107,14 @@
       <div>
         <p class="footer-heading">Contact the President</p>
         <p><strong>Beth Wiseman</strong></p>
-        <p>Phone: <a href="tel:+13011234567">(301) 123-4567</a></p>
+        <p>Phone: <a href="tel:+14104846866">410-484-6866</a></p>
         <p>Email: first.part[at]domain[dot]com</p>
       </div>
       <div class="footer-small">
-        <p>© <span id="year"></span> Patapsco Senior Citizens. All rights reserved.</p>
+        <p>© <span id="year"></span> BCASCO. All rights reserved.</p>
+        <p id="version-info" style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.7;">
+          Version: <span id="version-number">Loading...</span>
+        </p>
       </div>
     </div>
   </footer>

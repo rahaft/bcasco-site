@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Events - Remove Refreshments</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    button {
+      background: #1f6fb2;
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    button:hover {
+      background: #184c7d;
+    }
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    #status {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 4px;
+    }
+    #status.success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    #status.error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    #status.info {
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+    pre {
+      background: #f5f5f5;
+      padding: 1rem;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Update Events - Remove "and Refreshments"</h1>
+    <p>This will update all events in Firestore to remove "and Refreshments" from their notes field.</p>
+    <p><strong>Note:</strong> You must be logged in to Firebase to use this tool.</p>
+    
+    <button id="updateBtn">Update All Events</button>
+    
+    <div id="status"></div>
+    <div id="log"></div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="firebase-init.js"></script>
+  
+  <script>
+    const updateBtn = document.getElementById("updateBtn");
+    const statusEl = document.getElementById("status");
+    const logEl = document.getElementById("log");
+
+    function showStatus(message, type) {
+      statusEl.textContent = message;
+      statusEl.className = type;
+      statusEl.style.display = "block";
+    }
+
+    function addLog(message) {
+      const logEntry = document.createElement("div");
+      logEntry.textContent = message;
+      logEl.appendChild(logEntry);
+    }
+
+    updateBtn.addEventListener("click", async function() {
+      if (!db || !firebase) {
+        showStatus("Error: Firebase not initialized. Please refresh the page.", "error");
+        return;
+      }
+
+      // Check if user is logged in
+      auth.onAuthStateChanged(async (user) => {
+        if (!user) {
+          showStatus("Error: You must be logged in. Please log in at login.html first.", "error");
+          return;
+        }
+
+        updateBtn.disabled = true;
+        updateBtn.textContent = "Updating...";
+        logEl.innerHTML = "";
+        showStatus("Updating events...", "info");
+
+        try {
+          // Get all events
+          const snapshot = await db.collection("events").get();
+          
+          if (snapshot.empty) {
+            showStatus("No events found in the database.", "info");
+            updateBtn.disabled = false;
+            updateBtn.textContent = "Update All Events";
+            return;
+          }
+
+          // Process events in batches
+          const updates = [];
+          snapshot.forEach((doc) => {
+            const data = doc.data();
+            const notes = data.notes || "";
+            
+            // Check if notes contains "Networking and Refreshments" and update it
+            if (notes.includes("Networking and Refreshments") || notes.includes("Networking and refreshments")) {
+              const updatedNotes = notes.replace(/Networking and [Rr]efreshments/gi, "Networking");
+              
+              updates.push({
+                ref: doc.ref,
+                oldNotes: notes,
+                newNotes: updatedNotes,
+                title: data.title || doc.id
+              });
+            }
+          });
+
+          if (updates.length === 0) {
+            showStatus("No events need updating. All events already have the correct text.", "success");
+            updateBtn.disabled = false;
+            updateBtn.textContent = "Update All Events";
+            return;
+          }
+
+          // Process updates in batches of 500 (Firestore limit)
+          const BATCH_SIZE = 500;
+          let updated = 0;
+          
+          for (let i = 0; i < updates.length; i += BATCH_SIZE) {
+            const batch = db.batch();
+            const batchUpdates = updates.slice(i, i + BATCH_SIZE);
+            
+            batchUpdates.forEach((update) => {
+              batch.update(update.ref, {
+                notes: update.newNotes,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+              });
+              addLog(`Updating: "${update.title}"`);
+            });
+            
+            await batch.commit();
+            updated += batchUpdates.length;
+          }
+
+          showStatus(`Success! Updated ${updated} event(s).`, "success");
+          addLog(`\n✓ Complete! Updated ${updated} event(s).`);
+          
+        } catch (error) {
+          console.error("Error updating events:", error);
+          showStatus(`Error: ${error.message}`, "error");
+          addLog(`✗ Error: ${error.message}`);
+        }
+
+        updateBtn.disabled = false;
+        updateBtn.textContent = "Update All Events";
+      });
+    });
+  </script>
+</body>
+</html>
